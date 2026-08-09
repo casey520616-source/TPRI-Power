@@ -25,18 +25,27 @@
                         sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
                     },
                     colors: {
+                        stone: {
+                            50: '#fafaf9',
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            300: '#d6d3d1',
+                            400: '#a8a29e',
+                            500: '#78716c',
+                            600: '#57534e',
+                            700: '#44403c',
+                            800: '#292524',
+                            900: '#1c1917',
+                        },
                         emerald: {
-                            400: '#34d399',
                             500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
                         },
                         cyan: {
-                            400: '#22d3ee',
+                            500: '#06b6d4',
                             600: '#0891b2',
-                        },
-                        slate: {
-                            800: '#1e293b',
-                            900: '#0f172a',
-                            950: '#020617',
+                            700: '#0e7490',
                         }
                     }
                 }
@@ -47,30 +56,31 @@
     <!-- Custom CSS for Scrollbars & Glassmorphism -->
     <style>
         body {
-            background-color: #020617; /* slate-950 */
-            color: #f1f5f9; /* slate-100 */
+            background-color: #fafaf9; /* stone-50 */
+            color: #292524; /* stone-800 */
         }
         
-        /* Custom Scrollbar */
+        /* Custom Scrollbar - Light Theme */
         ::-webkit-scrollbar {
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f172a; 
+            background: #f5f5f4; /* stone-100 */
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155; 
+            background: #d6d3d1; /* stone-300 */
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #10b981; 
+            background: #059669; /* emerald-600 */
         }
 
-        /* Glass Panel utility */
+        /* Glass Panel utility - Light Theme */
         .glass-panel {
-            background-color: rgba(15, 23, 42, 0.8); /* slate-900/80 */
+            background-color: rgba(255, 255, 255, 0.85); /* white/85 */
             backdrop-filter: blur(12px);
-            border: 1px solid #1e293b; /* slate-800 */
+            border: 1px solid #e7e5e4; /* stone-200 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
         }
 
         /* Smooth Transitions */
@@ -96,14 +106,14 @@
             opacity: 1;
         }
 
-        /* Loading Skeleton Animation */
+        /* Loading Skeleton Animation - Light Theme */
         @keyframes shimmer {
             0% { background-position: -1000px 0; }
             100% { background-position: 1000px 0; }
         }
         .skeleton {
-            background: #1e293b;
-            background-image: linear-gradient(to right, #1e293b 0%, #334155 20%, #1e293b 40%, #1e293b 100%);
+            background: #e7e5e4; /* stone-200 */
+            background-image: linear-gradient(to right, #e7e5e4 0%, #f5f5f4 20%, #e7e5e4 40%, #e7e5e4 100%);
             background-repeat: no-repeat;
             background-size: 1000px 100%; 
             animation: shimmer 2s infinite linear forwards;
@@ -113,80 +123,80 @@
 <body class="antialiased min-h-screen flex flex-col font-sans">
 
     <!-- Login Overlay -->
-    <div id="login-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md transition-opacity duration-500">
+    <div id="login-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-stone-100/80 backdrop-blur-md transition-opacity duration-500">
         <!-- background effects -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-[100px]"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px]"></div>
+            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px]"></div>
         </div>
         
-        <div class="glass-panel border border-slate-700 p-8 rounded-2xl w-full max-w-sm relative z-10 shadow-2xl shadow-emerald-500/10">
+        <div class="glass-panel p-8 rounded-2xl w-full max-w-sm relative z-10">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 text-2xl mb-4 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                <div class="w-16 h-16 mx-auto rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-2xl mb-4 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                     <i class="fa-solid fa-bolt-lightning"></i>
                 </div>
-                <p class="text-xs text-slate-400 font-medium tracking-widest uppercase mb-4">TPRI Intelligence</p>
+                <p class="text-xs text-stone-500 font-medium tracking-widest uppercase mb-4">TPRI Intelligence</p>
                 
                 <!-- Auth Tabs -->
-                <div class="flex p-1 bg-slate-900/80 rounded-lg border border-slate-700/50 mb-2">
-                    <button type="button" id="tab-login" class="flex-1 py-2 text-sm font-medium rounded-md bg-slate-800 text-emerald-400 shadow-sm transition-all">登入</button>
-                    <button type="button" id="tab-register" class="flex-1 py-2 text-sm font-medium rounded-md text-slate-400 hover:text-slate-300 transition-all">註冊</button>
+                <div class="flex p-1 bg-stone-100 rounded-lg border border-stone-200 mb-2">
+                    <button type="button" id="tab-login" class="flex-1 py-2 text-sm font-medium rounded-md bg-white text-emerald-700 shadow-sm transition-all border border-stone-200/50">登入</button>
+                    <button type="button" id="tab-register" class="flex-1 py-2 text-sm font-medium rounded-md text-stone-500 hover:text-stone-700 transition-all">註冊</button>
                 </div>
             </div>
             
             <form id="login-form" class="flex flex-col gap-4">
                 <div id="name-field" class="hidden">
-                    <label class="block text-xs font-medium text-slate-400 mb-1">使用者名稱 (Name)</label>
+                    <label class="block text-xs font-medium text-stone-500 mb-1">使用者名稱 (Name)</label>
                     <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3 top-2.5 text-slate-500 text-sm"></i>
-                        <input type="text" id="login-name" class="w-full bg-slate-950/50 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="您的名字">
+                        <i class="fa-solid fa-user absolute left-3 top-2.5 text-stone-400 text-sm"></i>
+                        <input type="text" id="login-name" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="您的名字">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">電子郵件 (Email)</label>
+                    <label class="block text-xs font-medium text-stone-500 mb-1">電子郵件 (Email)</label>
                     <div class="relative">
-                        <i class="fa-solid fa-envelope absolute left-3 top-2.5 text-slate-500 text-sm"></i>
-                        <input type="email" id="login-email" class="w-full bg-slate-950/50 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="admin@tpri.com" required>
+                        <i class="fa-solid fa-envelope absolute left-3 top-2.5 text-stone-400 text-sm"></i>
+                        <input type="email" id="login-email" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="admin@tpri.com" required>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">密碼 (Password)</label>
+                    <label class="block text-xs font-medium text-stone-500 mb-1">密碼 (Password)</label>
                     <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3 top-2.5 text-slate-500 text-sm"></i>
-                        <input type="password" id="login-password" class="w-full bg-slate-950/50 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="••••••••" required>
+                        <i class="fa-solid fa-lock absolute left-3 top-2.5 text-stone-400 text-sm"></i>
+                        <input type="password" id="login-password" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="••••••••" required>
                     </div>
                 </div>
 
                 <div id="confirm-password-field" class="hidden">
-                    <label class="block text-xs font-medium text-slate-400 mb-1">確認密碼 (Confirm Password)</label>
+                    <label class="block text-xs font-medium text-stone-500 mb-1">確認密碼 (Confirm Password)</label>
                     <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3 top-2.5 text-slate-500 text-sm"></i>
-                        <input type="password" id="login-confirm-password" class="w-full bg-slate-950/50 border border-slate-700 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="••••••••">
+                        <i class="fa-solid fa-lock absolute left-3 top-2.5 text-stone-400 text-sm"></i>
+                        <input type="password" id="login-confirm-password" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="••••••••">
                     </div>
                 </div>
                 
                 <div class="flex justify-between items-center mt-1" id="auth-options">
                     <label class="flex items-center gap-2 cursor-pointer group">
-                        <input type="checkbox" class="w-3.5 h-3.5 rounded border-slate-600 bg-slate-900 text-emerald-500 focus:ring-emerald-500/50 cursor-pointer">
-                        <span class="text-xs text-slate-400 group-hover:text-slate-300 transition">記住我</span>
+                        <input type="checkbox" class="w-3.5 h-3.5 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500/50 cursor-pointer">
+                        <span class="text-xs text-stone-500 group-hover:text-stone-700 transition">記住我</span>
                     </label>
-                    <a href="#" class="text-xs text-cyan-400 hover:text-cyan-300 transition">忘記密碼？</a>
+                    <a href="#" class="text-xs text-cyan-600 hover:text-cyan-700 transition">忘記密碼？</a>
                 </div>
 
-                <button type="submit" id="auth-submit-btn" class="w-full py-2.5 mt-2 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-medium text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 group">
+                <button type="submit" id="auth-submit-btn" class="w-full py-2.5 mt-2 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-medium text-sm transition shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 group">
                     <i class="fa-solid fa-right-to-bracket group-hover:translate-x-1 transition-transform"></i> <span id="auth-btn-text">登入系統</span>
                 </button>
 
                 <div class="relative my-3" id="guest-divider">
                     <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-slate-700"></div>
+                        <div class="w-full border-t border-stone-200"></div>
                     </div>
                     <div class="relative flex justify-center text-xs">
-                        <span class="px-2 bg-slate-900 text-slate-500">或</span>
+                        <span class="px-2 bg-white text-stone-400">或</span>
                     </div>
                 </div>
                 
-                <button type="button" id="guest-login-btn" class="w-full py-2.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 font-medium text-sm transition flex items-center justify-center gap-2">
+                <button type="button" id="guest-login-btn" class="w-full py-2.5 rounded-lg bg-white hover:bg-stone-50 border border-stone-300 text-stone-600 font-medium text-sm transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-user-secret"></i> 訪客匿名進入
                 </button>
             </form>
@@ -194,20 +204,20 @@
     </div>
 
     <!-- Header / Nav -->
-    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 px-6 py-4">
+    <header class="sticky top-0 z-50 glass-panel border-b-0 px-6 py-4">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
+                <div class="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                     <i class="fa-solid fa-bolt-lightning"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-xl font-bold text-slate-100 tracking-wide">電力最新情報</h1>
-                        <span id="db-status-badge" class="px-2 py-0.5 rounded text-[10px] border border-slate-700 text-slate-400 bg-slate-800 flex items-center gap-1 transition-all duration-300">
+                        <h1 class="text-xl font-bold text-stone-800 tracking-wide">電力最新情報</h1>
+                        <span id="db-status-badge" class="px-2 py-0.5 rounded text-[10px] border border-stone-200 text-stone-500 bg-white flex items-center gap-1 transition-all duration-300 shadow-sm">
                             <i class="fa-solid fa-circle-notch fa-spin"></i> 檢查連線...
                         </span>
                     </div>
-                    <p class="text-xs text-slate-400">Net-Zero Engineering Intelligence</p>
+                    <p class="text-xs text-stone-500">Net-Zero Engineering Intelligence</p>
                 </div>
             </div>
 
@@ -219,11 +229,11 @@
                 </div>
 
                 <!-- User Actions (Hidden by default) -->
-                <div id="user-actions" class="hidden flex items-center gap-2 pl-4 border-l border-slate-700">
-                    <button id="admin-toggle-btn" class="px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-400 border border-cyan-500/30 hover:bg-slate-700 hover:text-cyan-300 text-xs transition flex items-center gap-2">
+                <div id="user-actions" class="hidden flex items-center gap-2 pl-4 border-l border-stone-200">
+                    <button id="admin-toggle-btn" class="px-3 py-1.5 rounded-lg bg-white text-cyan-700 border border-stone-200 hover:bg-stone-50 hover:text-cyan-800 text-xs transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-gauge-high"></i> <span id="admin-toggle-text">後台管理</span>
                     </button>
-                    <button id="logout-btn" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800 text-red-400 border border-red-500/30 hover:bg-slate-700 hover:text-red-300 text-xs transition">
+                    <button id="logout-btn" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-red-600 border border-stone-200 hover:bg-red-50 hover:border-red-200 text-xs transition shadow-sm">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
@@ -240,44 +250,44 @@
             <div class="w-full lg:w-8/12 flex flex-col gap-6">
                 
                 <!-- Hero Section -->
-                <section class="glass-panel rounded-2xl p-6 relative overflow-hidden border border-emerald-500/30">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 text-8xl text-emerald-500 pointer-events-none">
+                <section class="glass-panel rounded-2xl p-6 relative overflow-hidden border-emerald-200 border">
+                    <div class="absolute top-0 right-0 p-4 opacity-[0.05] text-8xl text-emerald-700 pointer-events-none">
                         <i class="fa-solid fa-tower-cell"></i>
                     </div>
                     
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 rounded-full text-xs font-bold tracking-wide">
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold tracking-wide">
                             最新發布
                         </span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight" id="hero-report-id">
+                        <h2 class="text-2xl md:text-3xl font-bold text-stone-800 tracking-tight" id="hero-report-id">
                             載入中...
                         </h2>
                     </div>
                     
                     <div id="hero-summary-container" class="mb-6 relative z-10">
-                        <div class="skeleton h-4 w-full mb-2"></div>
-                        <div class="skeleton h-4 w-5/6 mb-2"></div>
-                        <div class="skeleton h-4 w-4/6"></div>
+                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-5/6 mb-2 rounded"></div>
+                        <div class="skeleton h-4 w-4/6 rounded"></div>
                     </div>
                     
-                    <div class="flex items-center gap-3 mt-4 pt-4 border-t border-slate-700/50">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-slate-600">
+                    <div class="flex items-center gap-3 mt-4 pt-4 border-t border-stone-200">
+                        <div class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 border border-stone-300">
                             <i class="fa-solid fa-user-astronaut"></i>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-slate-200" id="hero-author">Casey Chen</p>
-                            <p class="text-xs text-slate-400" id="hero-bio">電力物聯網研究者</p>
+                            <p class="text-sm font-bold text-stone-700" id="hero-author">Casey Chen</p>
+                            <p class="text-xs text-stone-500" id="hero-bio">電力物聯網研究者</p>
                         </div>
                     </div>
                 </section>
 
             <!-- Module A: Global Intelligence (Cards) -->
             <section>
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-globe text-cyan-400"></i> 全球最新電力情報
+                <div class="flex items-center justify-between mb-4 mt-2">
+                    <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2">
+                        <i class="fa-solid fa-globe text-cyan-600"></i> 全球最新電力情報
                     </h3>
-                    <span class="text-xs text-slate-400" id="active-filter-display">全部顯示</span>
+                    <span class="text-xs text-stone-500 bg-white px-2 py-1 rounded border border-stone-200 shadow-sm" id="active-filter-display">全部顯示</span>
                 </div>
                 
                 <!-- Cards Container -->
@@ -288,30 +298,30 @@
                 </div>
                 
                 <!-- Empty State (Hidden by default) -->
-                <div id="empty-state" class="hidden glass-panel rounded-xl p-10 text-center border-dashed border-2 border-slate-700">
-                    <div class="w-16 h-16 mx-auto rounded-full bg-slate-800 flex items-center justify-center mb-4 text-slate-400 text-2xl">
+                <div id="empty-state" class="hidden glass-panel rounded-xl p-10 text-center border-dashed border-2 border-stone-300 bg-stone-50">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center mb-4 text-stone-400 text-2xl border border-stone-200">
                         <i class="fa-solid fa-satellite-dish"></i>
                     </div>
-                    <h4 class="text-lg font-medium text-slate-200 mb-2">查無此情報？</h4>
-                    <p class="text-sm text-slate-400 mb-4">目前篩選條件下沒有符合的記錄，試試推薦的核心技術標籤：</p>
+                    <h4 class="text-lg font-medium text-stone-700 mb-2">查無此情報？</h4>
+                    <p class="text-sm text-stone-500 mb-4">目前篩選條件下沒有符合的記錄，試試推薦的核心技術標籤：</p>
                     <div class="flex justify-center gap-2">
-                        <button onclick="setFilter('虛擬電廠')" class="px-3 py-1 text-xs rounded-full bg-slate-800 text-emerald-400 hover:bg-slate-700 transition">#虛擬電廠</button>
-                        <button onclick="setFilter('電網韌性')" class="px-3 py-1 text-xs rounded-full bg-slate-800 text-cyan-400 hover:bg-slate-700 transition">#電網韌性</button>
-                        <button onclick="setFilter('AI用電')" class="px-3 py-1 text-xs rounded-full bg-slate-800 text-purple-400 hover:bg-slate-700 transition">#AI用電</button>
+                        <button onclick="setFilter('虛擬電廠')" class="px-3 py-1 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 transition">#虛擬電廠</button>
+                        <button onclick="setFilter('電網韌性')" class="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition">#電網韌性</button>
+                        <button onclick="setFilter('AI用電')" class="px-3 py-1 text-xs rounded-full bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100 transition">#AI用電</button>
                     </div>
                 </div>
             </section>
 
             <!-- Module B: Taiwan Status & Strategy (Accordion) -->
-            <section class="mb-8">
-                <h3 class="text-lg font-semibold text-slate-200 flex items-center gap-2 mb-4">
-                    <i class="fa-solid fa-map-location-dot text-emerald-400"></i> 台灣現狀評估與策略
+            <section class="mb-8 mt-4">
+                <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-map-location-dot text-emerald-600"></i> 台灣現狀評估與策略
                 </h3>
-                <div class="glass-panel rounded-xl overflow-hidden" id="taiwan-analysis-container">
-                    <!-- Header -->
-                    <div class="p-5 border-b border-slate-800">
-                        <div class="skeleton h-6 w-1/3 mb-3"></div>
-                        <div class="skeleton h-10 w-full"></div>
+                <div class="glass-panel rounded-xl overflow-hidden shadow-sm" id="taiwan-analysis-container">
+                    <!-- Header Skeletons -->
+                    <div class="p-5 border-b border-stone-200">
+                        <div class="skeleton h-6 w-1/3 mb-3 rounded"></div>
+                        <div class="skeleton h-10 w-full rounded"></div>
                     </div>
                 </div>
             </section>
@@ -321,34 +331,36 @@
         <div class="w-full lg:w-4/12 flex flex-col gap-6">
             
             <!-- Module D: System Trigger (Gemini API Simulator) -->
-            <section class="glass-panel rounded-xl p-5 border border-emerald-500/20 relative overflow-hidden">
-                <div class="absolute -right-4 -bottom-4 opacity-5 text-9xl text-emerald-500 pointer-events-none">
+            <section class="glass-panel rounded-xl p-5 border border-emerald-200 relative overflow-hidden bg-white/90">
+                <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-9xl text-emerald-700 pointer-events-none">
                     <i class="fa-brands fa-space-awesome"></i>
                 </div>
-                <h3 class="text-sm font-semibold text-emerald-400 mb-2 uppercase tracking-wider">AI Agent Control (Gemini 3.5 Flash)</h3>
-                <p class="text-xs text-slate-400 mb-4">透過 Gemini-3.5-flash 模型即時爬梳全球網際網路，以極速生成最新一週的電力情報結構化數據。</p>
-                <button id="trigger-gemini-btn" class="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-medium text-sm transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                <h3 class="text-sm font-bold text-emerald-700 mb-2 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-microchip"></i> AI Agent Control
+                </h3>
+                <p class="text-xs text-stone-600 mb-4 leading-relaxed">透過 <b>Gemini-3.5-flash</b> 模型即時爬梳全球網際網路，以極速生成最新一週的電力情報結構化數據。</p>
+                <button id="trigger-gemini-btn" class="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-medium text-sm transition shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> 觸發 Gemini-3.5-flash 分析
                 </button>
             </section>
 
             <!-- Module C: Historical Archives -->
-            <section class="glass-panel rounded-xl p-5 flex-grow flex flex-col h-[500px]">
-                <h3 class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-slate-400"></i> 歷史情報歸檔
+            <section class="glass-panel rounded-xl p-5 flex-grow flex flex-col h-[500px] bg-white/60">
+                <h3 class="text-sm font-bold text-stone-700 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-stone-400"></i> 歷史情報歸檔
                 </h3>
                 
                 <div class="relative mb-4">
-                    <input type="text" id="history-search" placeholder="搜尋歷史週報..." class="w-full bg-slate-950 border border-slate-800 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 transition">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-sm"></i>
+                    <input type="text" id="history-search" placeholder="搜尋歷史週報..." class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 transition shadow-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-stone-400 text-sm"></i>
                 </div>
 
                 <div class="overflow-y-auto flex-grow pr-2" id="history-list-container">
                     <!-- History items injected here -->
                     <div class="flex flex-col gap-2">
-                        <div class="skeleton h-12 w-full rounded-lg"></div>
-                        <div class="skeleton h-12 w-full rounded-lg"></div>
-                        <div class="skeleton h-12 w-full rounded-lg"></div>
+                        <div class="skeleton h-14 w-full rounded-lg border border-stone-200"></div>
+                        <div class="skeleton h-14 w-full rounded-lg border border-stone-200"></div>
+                        <div class="skeleton h-14 w-full rounded-lg border border-stone-200"></div>
                     </div>
                 </div>
             </section>
@@ -357,35 +369,35 @@
         <!-- Admin View (Hidden by default) -->
         <div id="admin-view" class="hidden w-full flex-col gap-6 fade-enter">
             <div class="flex items-center justify-between mb-2">
-                <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-users-gear text-cyan-400"></i> 後台管理中心
+                <h2 class="text-2xl font-bold text-stone-800 flex items-center gap-3">
+                    <i class="fa-solid fa-users-gear text-cyan-600"></i> 後台管理中心
                 </h2>
-                <span class="px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded-full border border-slate-700">系統會員總覽</span>
+                <span class="px-3 py-1 bg-white text-stone-600 text-xs rounded-full border border-stone-300 shadow-sm">系統會員總覽</span>
             </div>
 
-            <section class="glass-panel rounded-2xl p-6 border border-slate-700">
+            <section class="glass-panel rounded-2xl p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-semibold text-slate-200">註冊會員清單</h3>
-                    <button onclick="window.fetchUsers()" class="text-xs px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition flex items-center gap-2">
+                    <h3 class="text-lg font-bold text-stone-700">註冊會員清單</h3>
+                    <button onclick="window.fetchUsers()" class="text-xs px-3 py-1.5 bg-white hover:bg-stone-50 text-stone-700 rounded border border-stone-300 transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-rotate-right"></i> 重新整理
                     </button>
                 </div>
                 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-300 whitespace-nowrap">
-                        <thead class="text-xs text-slate-400 uppercase bg-slate-900/50 border-y border-slate-700">
+                    <table class="w-full text-left text-sm text-stone-700 whitespace-nowrap">
+                        <thead class="text-xs text-stone-500 uppercase bg-stone-100 border-y border-stone-200">
                             <tr>
-                                <th class="px-4 py-3 font-medium">使用者名稱</th>
-                                <th class="px-4 py-3 font-medium">Email</th>
-                                <th class="px-4 py-3 font-medium">權限角色</th>
-                                <th class="px-4 py-3 font-medium">註冊時間</th>
-                                <th class="px-4 py-3 font-medium text-right">狀態</th>
+                                <th class="px-4 py-3 font-semibold">使用者名稱</th>
+                                <th class="px-4 py-3 font-semibold">Email</th>
+                                <th class="px-4 py-3 font-semibold">權限角色</th>
+                                <th class="px-4 py-3 font-semibold">註冊時間</th>
+                                <th class="px-4 py-3 font-semibold text-right">狀態</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-users-list" class="divide-y divide-slate-800/50">
+                        <tbody id="admin-users-list" class="divide-y divide-stone-200">
                             <!-- User rows injected here -->
                             <tr>
-                                <td colspan="5" class="px-4 py-8 text-center text-slate-500">
+                                <td colspan="5" class="px-4 py-8 text-center text-stone-500">
                                     <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> 載入會員資料中...
                                 </td>
                             </tr>
@@ -397,19 +409,19 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-800/80 bg-slate-950 mt-auto py-6">
+    <footer class="border-t border-stone-200 bg-stone-100 mt-auto py-6">
         <div class="max-w-7xl mx-auto px-6 text-center">
-            <p class="text-sm text-slate-500">
+            <p class="text-sm text-stone-500 font-medium">
                 電力最新情報 | 創作者: Casey Chen (電力物聯網研究者) <br>
-                <span class="text-xs mt-1 inline-block">Copyright ©2026 Casey Chen All rights reserved.</span>
+                <span class="text-xs mt-1 inline-block font-normal">Copyright ©2026 Casey Chen All rights reserved.</span>
             </p>
         </div>
     </footer>
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
-        <div class="glass-panel border border-emerald-500/50 bg-slate-900/90 text-slate-100 px-4 py-3 rounded-lg shadow-xl shadow-emerald-500/10 flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <div class="bg-white/95 backdrop-blur-sm border border-stone-200 text-stone-800 px-4 py-3 rounded-lg shadow-xl flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
             <span id="toast-message" class="text-sm font-medium">操作成功</span>
         </div>
     </div>
@@ -421,29 +433,27 @@
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDocs, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Constants & State
+        // Constants & State - Updated with Light Theme Colors
         const KEYWORDS = ["虛擬電廠", "AI DC", "AI用電", "電網韌性", "電網慣性"];
         const KEYWORD_STYLES = {
-            "虛擬電廠": "text-purple-400 bg-purple-400/10 border-purple-400/30",
-            "AI DC": "text-blue-400 bg-blue-400/10 border-blue-400/30",
-            "AI用電": "text-orange-400 bg-orange-400/10 border-orange-400/30",
-            "電網韌性": "text-emerald-400 bg-emerald-400/10 border-emerald-400/30",
-            "電網慣性": "text-cyan-400 bg-cyan-400/10 border-cyan-400/30"
+            "虛擬電廠": "text-purple-700 bg-purple-100 border-purple-200",
+            "AI DC": "text-blue-700 bg-blue-100 border-blue-200",
+            "AI用電": "text-orange-700 bg-orange-100 border-orange-200",
+            "電網韌性": "text-emerald-700 bg-emerald-100 border-emerald-200",
+            "電網慣性": "text-cyan-700 bg-cyan-100 border-cyan-200"
         };
         
         let state = {
             reports: [],
             currentReport: null,
-            activeFilter: null, // null means show all
+            activeFilter: null,
             isLoading: true,
             userId: null,
             isAnonymous: true,
             isAdminView: false
         };
 
-        // Firebase Configuration (User Provided)
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'demo-power-intel';
-        
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA7ctG-8aA-U9IsCsAto0ZHrb_45pDV-Aw",
             authDomain: "tpri-power.firebaseapp.com",
@@ -459,8 +469,6 @@
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-            // 啟用離線快取以增強穩定性 (PRD 7.2)
-            // Note: 在某些瀏覽器環境中需確保 Firestore 設定正確
             console.log("Firebase initialized successfully.");
         } catch (e) {
             console.error("Error initializing Firebase:", e);
@@ -475,22 +483,20 @@
                 // Listen for auth state changes
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
-                        // User is signed in
                         state.userId = user.uid;
                         state.isAnonymous = user.isAnonymous;
                         hideLoginOverlay();
                         updateHeaderActions();
                         
-                        statusBadge.innerHTML = '<i class="fa-solid fa-cloud text-emerald-400"></i> Firebase 已連線';
-                        statusBadge.className = 'px-2 py-0.5 rounded text-[10px] border border-emerald-500/30 text-emerald-400 bg-emerald-500/10 flex items-center gap-1 transition-all duration-300';
+                        statusBadge.innerHTML = '<i class="fa-solid fa-cloud text-emerald-600"></i> Firebase 已連線';
+                        statusBadge.className = 'px-2 py-0.5 rounded text-[10px] border border-emerald-200 text-emerald-700 bg-emerald-50 flex items-center gap-1 transition-all duration-300 shadow-sm font-medium';
                         
                         await fetchReports();
                     } else {
-                        // User is signed out, show login
                         state.userId = null;
                         state.isAnonymous = true;
                         updateHeaderActions();
-                        if(state.isAdminView) window.toggleAdminView(); // Reset to main view if logged out
+                        if(state.isAdminView) window.toggleAdminView();
                         showLoginOverlay();
                     }
                 });
@@ -503,19 +509,12 @@
         }
 
         // Database Operations
-        function getCollectionPath() {
-            // Rule 1: Strict Paths - 使用 artifacts/{appId}/public/data/ 結構
-            return `artifacts/${appId}/public/data/electricity_reports`;
-        }
-        
-        function getUsersCollectionPath() {
-            return `artifacts/${appId}/public/data/users`;
-        }
+        function getCollectionPath() { return `electricity_reports`; }
+        function getUsersCollectionPath() { return `users`; }
 
         async function fetchReports() {
             state.isLoading = true;
             try {
-                // Rule 2: No Complex Queries. Fetch all, sort in memory.
                 const q = query(collection(db, getCollectionPath()));
                 const querySnapshot = await getDocs(q);
                 
@@ -525,68 +524,70 @@
                 });
 
                 if (fetchedReports.length === 0) {
-                    // Seed initial data if empty
                     console.log("No data found, seeding initial PRD data...");
                     await seedInitialData();
                 } else {
-                    // Sort descending by reportId (e.g., 2026-W09 > 2026-W08)
                     state.reports = fetchedReports.sort((a, b) => b.reportId.localeCompare(a.reportId));
                     state.currentReport = state.reports[0];
                     renderUI();
                 }
             } catch (error) {
                 console.error("Error fetching reports:", error);
-                showToast("網路錯誤，載入離線備份資料", "error");
+                
+                const statusBadge = document.getElementById('db-status-badge');
+                statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-600"></i> 本機備份資料';
+                statusBadge.className = 'px-2 py-0.5 rounded text-[10px] border border-amber-300 text-amber-700 bg-amber-50 flex items-center gap-1 transition-all duration-300 shadow-sm font-medium';
+                
+                showToast("權限受阻或網路錯誤，目前載入離線備份資料。", "error");
                 loadMockData();
             } finally {
                 state.isLoading = false;
             }
         }
 
-        // The exact data structure requested in PRD 6.1
         const initialMockData = {
             reportId: "2026-W08",
             createdTime: "2026-02-22T08:00:00Z",
             author: "Casey Chen (Global Power Expert)",
             authorBio: "全球電網韌性與淨零工程首席分析師",
-            summary: "本週全球核心焦點：AI 資料中心 (AI DC) 用電呈指數型增長，對區域電網慣性(Inertia)與頻率控制造成空前壓力。歐美先進電網正加速推動「核能與AI資料中心共站(Co-location)」及「跨國虛擬電廠(VPP)動態聚合」技術。台灣面臨北部電網容量瓶頸，亟需從單純的「增加電源」轉向「系統韌性與分散式資源調度(DERMS)」。",
+            summary: "本週由 Gemini-3.5-flash AI 代理分析指出：全球核心焦點已從單純「發電量」轉向「系統穩定度」。AI 資料中心 (AI DC) 用電呈指數型增長，對區域電網慣性(Inertia)與頻率控制造成空前壓力。歐美先進電網正加速推動「核能與AI資料中心共站(Co-location)」及「跨國虛擬電廠(VPP)動態聚合」技術。台灣面臨北部電網容量瓶頸，亟需從「增加電源」轉向「系統韌性與分散式資源調度(DERMS)」。",
             globalIntelligence: [
                 {
                     region: "歐洲", flag: "🇪🇺",
                     title: "ENTSO-E 發布泛歐 VPP 併網與合成慣性標準",
-                    content: "歐洲輸電網營運商聯盟(ENTSO-E)強制要求新建大型 VPP 必須提供「合成慣性」。透過逆變器控制演算法，使分散式儲能與風機在電網頻率驟降的250毫秒內釋放實功，成功將電網最低頻率(Nadir)提升0.15Hz。",
+                    content: "歐洲輸電網營運商聯盟(ENTSO-E)強制要求新建大型 VPP 必須提供「合成慣性(Synthetic Inertia)」。透過構網型逆變器(Grid-forming Inverters)控制演算法，使分散式儲能與風機在電網頻率驟降的250毫秒內釋放實功，成功將電網最低頻率(Nadir)提升0.15Hz。",
                     metrics: { resilienceScore: 92, vppAdoptionRate: "68%" },
                     tags: ["虛擬電廠", "電網韌性", "電網慣性"]
                 },
                 {
                     region: "美國", flag: "🇺🇸",
                     title: "PJM 預警 AI 用電飆升，核能微電網成解方",
-                    content: "全美最大區域電網 PJM 警告未來三年 AI DC 將新增逾 10GW 負載。AWS 與微軟相繼推進「核能直供(Behind-the-Meter)」計畫。同時，FERC 第2222號命令加速落地，要求各州解除 VPP 參與批發市場的限制。",
+                    content: "全美最大區域電網 PJM 警告未來三年 AI DC 將新增逾 10GW 負載。AWS 與微軟相繼推進「核能與資料中心共站(Co-location)」的直供計畫。同時，FERC 第2222號命令加速落地，要求各州解除 VPP 參與批發市場的限制。",
                     metrics: { resilienceScore: 88, vppAdoptionRate: "45%" },
                     tags: ["AI DC", "AI用電", "虛擬電廠"]
                 },
                 {
                     region: "日本", flag: "🇯🇵",
                     title: "九州高佔比光電解方：AI 動態慣性預估系統",
-                    content: "面對高達 80% 的太陽能滲透率導致慣性大幅流失，九州電力導入 AI 預測模型。以 5 分鐘為週期精準預估剩餘系統慣量，並動態喚醒工業用戶的需量反應(DR)與抽蓄水力，成功避免大規模棄光。",
+                    content: "面對高達 80% 的太陽能滲透率導致慣性大幅流失，九州電力導入 AI 邊緣運算預測模型。以 5 分鐘為週期精準預估剩餘系統慣量，並動態喚醒工業用戶的需量反應(DR)與抽蓄水力，成功避免大規模棄光。",
                     metrics: { resilienceScore: 85, vppAdoptionRate: "42%" },
                     tags: ["電網慣性", "AI用電", "電網韌性"]
                 },
                 {
                     region: "澳洲", flag: "🇦🇺",
                     title: "南澳達成 100% 再生能源，調相機成定海神針",
-                    content: "AEMO 證實南澳電網連續 72 小時完全由風光及分散式電池(VPP)供電。關鍵在於安裝了 4 座大型同步調相機(Synchronous Condensers)，不發電但提供轉子動能，補足了缺乏燃煤機組時所需的系統強度。",
+                    content: "AEMO 證實南澳電網連續 72 小時完全由風光及分散式電池(VPP)供電。關鍵在於安裝了 4 座大型同步調相機(Synchronous Condensers)，不發電但提供轉子動能，補足了缺乏燃煤機組時所需的系統強度與短路容量(Short Circuit Ratio)。",
                     metrics: { resilienceScore: 95, vppAdoptionRate: "75%" },
                     tags: ["電網韌性", "電網慣性"]
                 }
             ],
             taiwanAnalysis: {
-                currentStatus: "台灣目前陷入「南電北送」傳輸瓶頸。北部科技廊帶(桃園、新竹)的 AI 資料中心擴建申請量已遠超區域電網負荷。同時，隨著燃煤機組陸續除役，系統整體電網慣性正處於歷史低點，對於大型機組跳脫的耐受能力減弱。",
-                gapAnalysis: "相比歐美已將 VPP 與 AI DC 深度綁定，台灣的輔助服務市場（如 dReg、E-dReg）仍以獨立大型儲能為主，缺乏將電動車(EV)、商辦空調等「螞蟻雄兵」聚合成 VPP 的誘因與通訊標準 (如 OpenADR 2.0b 的普及化)。",
+                currentStatus: "台灣目前陷入嚴重的「南電北送」傳輸瓶頸。北部科技廊帶(桃園、新竹)的 AI 資料中心擴建申請量已遠超區域輸電網(345kV/161kV)負荷。同時，隨著大型燃煤與核能機組陸續除役，系統整體電網慣性正處於歷史低點，對於大型機組跳脫(N-1/N-2 事故)的耐受能力大幅減弱。",
+                gapAnalysis: "相比歐美已將 VPP 與 AI DC 深度綁定並納入調度，台灣的輔助服務市場（如 dReg、E-dReg）仍以獨立大型儲能為主，缺乏將電動車(EV)、商辦空調等「螞蟻雄兵」聚合成 VPP 的誘因與通訊標準 (如 OpenADR 2.0b 的普及化)，且缺乏針對「慣性」的市場計價機制。",
                 strategicRecommendations: {
-                    shortTerm: "【解除容量緊箍咒】針對北部 AI DC 設立「彈性用電條款」，強制要求新建資料中心須自備 20% 以上的高功率儲能或燃料電池，並在系統尖峰時段無條件接受台電調度。",
-                    mediumTerm: "【建構動態慣性監測網】全面引進 AI 慣性估測技術。在強風光時段，若系統慣量低於安全門檻，應啟動「快速頻率響應(FFR)」資源，或將部分停機的燃氣機組改裝為調相機運轉。",
-                    longTerm: "【推動全民 VPP 市場化】修法擴大電力交易平台參與者資格，將 V2G (Vehicle-to-Grid) 納入法規，讓全台百萬輛電動車成為穩定電網的最大虛擬備用容量。"
+                    shortTerm: "【解除容量緊箍咒】針對北部 AI DC 設立「彈性用電條款」，強制要求新建資料中心須自備 20% 以上的高功率儲能或燃料電池，並在系統夜尖峰時段無條件接受 TSO (台電) 統一調度。",
+                    mediumTerm: "【建構動態慣性監測網與 FFR】全面引進 AI 慣性估測技術。在強風光時段，若系統慣量低於安全門檻，應啟動「快速頻率響應(FFR)」資源，或將部分即將除役的傳統機組改裝為調相機(Synchronous Condenser)持續運轉，提供電壓支撐。",
+                    longTerm: "【推動全民 VPP 與慣性市場化】修法擴大電力交易平台參與者資格，將 V2G (Vehicle-to-Grid) 納入法規。參考英國國家電網(National Grid)啟動「穩定性(Stability)拍賣市場」，針對能提供合成慣性的構網型設備給予高額容量費率，引導民間資金投資高階電網支撐設施。"
                 }
             },
             keywordsMetadata: {
@@ -615,7 +616,6 @@
             renderUI();
         }
 
-        // Header Actions Update
         function updateHeaderActions() {
             const actionsContainer = document.getElementById('user-actions');
             if (state.userId && !state.isAnonymous) {
@@ -625,13 +625,14 @@
             }
         }
 
-        // UI Rendering
         function renderFilterTags() {
             const container = document.getElementById('keyword-filters');
             container.innerHTML = KEYWORDS.map(kw => {
                 const isActive = state.activeFilter === kw;
-                const baseClass = "px-3 py-1.5 rounded-full text-xs font-medium border cursor-pointer transition-all duration-200";
-                const activeClass = isActive ? KEYWORD_STYLES[kw] : "text-slate-400 border-slate-700 hover:border-slate-500 hover:text-slate-200 bg-transparent";
+                const baseClass = "px-3 py-1.5 rounded-full text-xs font-medium border cursor-pointer transition-all duration-200 shadow-sm";
+                const activeClass = isActive 
+                    ? KEYWORD_STYLES[kw] 
+                    : "text-stone-500 border-stone-300 hover:border-stone-400 hover:bg-stone-100 bg-white";
                 return `<button onclick="window.setFilter('${kw}')" class="${baseClass} ${activeClass}">${kw}</button>`;
             }).join('');
             
@@ -639,11 +640,7 @@
         }
 
         window.setFilter = (kw) => {
-            if (state.activeFilter === kw) {
-                state.activeFilter = null; // Toggle off
-            } else {
-                state.activeFilter = kw;
-            }
+            state.activeFilter = state.activeFilter === kw ? null : kw;
             renderFilterTags();
             renderGlobalCards();
         };
@@ -651,11 +648,10 @@
         function renderUI() {
             if (!state.currentReport) return;
             
-            // Render Hero
             document.getElementById('hero-report-id').textContent = state.currentReport.reportId;
             document.getElementById('hero-author').textContent = state.currentReport.author;
             document.getElementById('hero-bio').textContent = state.currentReport.authorBio;
-            document.getElementById('hero-summary-container').innerHTML = `<p class="text-slate-300 leading-relaxed text-sm md:text-base">${state.currentReport.summary}</p>`;
+            document.getElementById('hero-summary-container').innerHTML = `<p class="text-stone-600 font-medium leading-relaxed text-sm md:text-base">${state.currentReport.summary}</p>`;
             
             renderGlobalCards();
             renderTaiwanAnalysis();
@@ -663,7 +659,7 @@
         }
 
         function getTagStyle(tag) {
-            return KEYWORD_STYLES[tag] || "text-slate-400 bg-slate-800 border-slate-700";
+            return KEYWORD_STYLES[tag] || "text-stone-500 bg-stone-100 border-stone-200";
         }
 
         function renderGlobalCards() {
@@ -686,36 +682,36 @@
                 emptyState.classList.add('hidden');
                 
                 container.innerHTML = filteredCards.map((card, index) => `
-                    <div class="glass-panel rounded-xl p-5 border border-slate-800 hover:border-slate-700 transition-colors fade-enter fade-enter-active" style="animation-delay: ${index * 0.1}s">
+                    <div class="glass-panel rounded-xl p-5 hover:border-emerald-300 transition-colors fade-enter fade-enter-active bg-white" style="animation-delay: ${index * 0.1}s">
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex items-center gap-2">
                                 <span class="text-2xl">${card.flag}</span>
-                                <span class="font-semibold text-slate-200 text-sm">${card.region}</span>
+                                <span class="font-bold text-stone-700 text-sm">${card.region}</span>
                             </div>
                         </div>
-                        <h4 class="text-base font-bold text-white mb-2 leading-tight">${card.title}</h4>
-                        <p class="text-sm text-slate-400 mb-4 h-16 overflow-hidden">${card.content}</p>
+                        <h4 class="text-base font-bold text-stone-900 mb-2 leading-tight">${card.title}</h4>
+                        <p class="text-sm text-stone-600 mb-4 h-[4.5rem] overflow-hidden">${card.content}</p>
                         
-                        <!-- Metrics -->
-                        <div class="grid grid-cols-2 gap-3 mb-4 p-3 bg-slate-950/50 rounded-lg border border-slate-800/50">
+                        <!-- Metrics (Light Theme) -->
+                        <div class="grid grid-cols-2 gap-3 mb-4 p-3 bg-stone-50 rounded-lg border border-stone-200 shadow-inner">
                             <div>
-                                <p class="text-[10px] text-slate-500 uppercase">韌性分數</p>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-lg font-bold ${card.metrics.resilienceScore >= 85 ? 'text-emerald-400' : 'text-yellow-400'}">${card.metrics.resilienceScore}</span>
-                                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                                        <div class="bg-emerald-500 h-full" style="width: ${card.metrics.resilienceScore}%"></div>
+                                <p class="text-[10px] font-semibold text-stone-500 uppercase">韌性分數</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-lg font-bold ${card.metrics.resilienceScore >= 85 ? 'text-emerald-600' : 'text-amber-500'}">${card.metrics.resilienceScore}</span>
+                                    <div class="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
+                                        <div class="${card.metrics.resilienceScore >= 85 ? 'bg-emerald-500' : 'bg-amber-400'} h-full" style="width: ${card.metrics.resilienceScore}%"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <p class="text-[10px] text-slate-500 uppercase">VPP 滲透率</p>
-                                <p class="text-lg font-bold text-cyan-400">${card.metrics.vppAdoptionRate}</p>
+                            <div class="pl-2 border-l border-stone-200">
+                                <p class="text-[10px] font-semibold text-stone-500 uppercase">VPP 滲透率</p>
+                                <p class="text-lg font-bold text-cyan-600 mt-0.5">${card.metrics.vppAdoptionRate}</p>
                             </div>
                         </div>
 
                         <!-- Tags -->
                         <div class="flex flex-wrap gap-1.5">
-                            ${card.tags.map(tag => `<span class="px-2 py-0.5 rounded text-[10px] border ${getTagStyle(tag)}">${tag}</span>`).join('')}
+                            ${card.tags.map(tag => `<span class="px-2 py-0.5 rounded text-[10px] font-medium border ${getTagStyle(tag)}">${tag}</span>`).join('')}
                         </div>
                     </div>
                 `).join('');
@@ -727,34 +723,34 @@
             const data = state.currentReport.taiwanAnalysis;
             
             container.innerHTML = `
-                <div class="p-5 border-b border-slate-800">
-                    <h4 class="text-sm font-semibold text-slate-400 mb-2 uppercase">Current Status & Gap</h4>
-                    <p class="text-slate-200 text-sm mb-3 font-medium">${data.currentStatus}</p>
-                    <div class="bg-red-500/10 border border-red-500/20 rounded p-3 flex items-start gap-3">
-                        <i class="fa-solid fa-triangle-exclamation text-red-400 mt-0.5"></i>
-                        <p class="text-xs text-red-200">${data.gapAnalysis}</p>
+                <div class="p-5 border-b border-stone-200 bg-white">
+                    <h4 class="text-sm font-bold text-stone-500 mb-2 uppercase tracking-wide">Current Status & Gap</h4>
+                    <p class="text-stone-800 text-sm mb-4 font-medium leading-relaxed">${data.currentStatus}</p>
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-3 shadow-sm">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+                        <p class="text-xs text-amber-800 font-medium leading-relaxed">${data.gapAnalysis}</p>
                     </div>
                 </div>
                 
                 <!-- Accordion for Strategies -->
-                <div>
-                    <button onclick="window.toggleAccordion()" class="w-full p-4 flex justify-between items-center text-left hover:bg-slate-800/50 transition text-emerald-400 font-medium text-sm">
+                <div class="bg-white">
+                    <button onclick="window.toggleAccordion()" class="w-full p-4 flex justify-between items-center text-left hover:bg-stone-50 transition text-emerald-700 font-bold text-sm">
                         <span><i class="fa-solid fa-chess-knight mr-2"></i> 策略建議書 (Strategic Recommendations)</span>
                         <i class="fa-solid fa-chevron-down transition-transform duration-300" id="accordion-icon"></i>
                     </button>
-                    <div id="strategy-content" class="accordion-content bg-slate-950/50">
-                        <div class="p-5 flex flex-col gap-4 border-t border-slate-800/50">
-                            <div class="flex gap-4">
-                                <div class="w-12 h-6 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center shrink-0">短期</div>
-                                <p class="text-sm text-slate-300">${data.strategicRecommendations.shortTerm}</p>
+                    <div id="strategy-content" class="accordion-content bg-stone-50/50">
+                        <div class="p-5 flex flex-col gap-5 border-t border-stone-200">
+                            <div class="flex gap-4 items-start">
+                                <div class="w-12 h-6 rounded bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center justify-center shrink-0 shadow-sm">短期</div>
+                                <p class="text-sm text-stone-700 leading-relaxed font-medium">${data.strategicRecommendations.shortTerm}</p>
                             </div>
-                            <div class="flex gap-4">
-                                <div class="w-12 h-6 rounded bg-cyan-500/20 text-cyan-400 text-xs font-bold flex items-center justify-center shrink-0">中期</div>
-                                <p class="text-sm text-slate-300">${data.strategicRecommendations.mediumTerm}</p>
+                            <div class="flex gap-4 items-start">
+                                <div class="w-12 h-6 rounded bg-cyan-100 border border-cyan-200 text-cyan-700 text-xs font-bold flex items-center justify-center shrink-0 shadow-sm">中期</div>
+                                <p class="text-sm text-stone-700 leading-relaxed font-medium">${data.strategicRecommendations.mediumTerm}</p>
                             </div>
-                            <div class="flex gap-4">
-                                <div class="w-12 h-6 rounded bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center shrink-0">長期</div>
-                                <p class="text-sm text-slate-300">${data.strategicRecommendations.longTerm}</p>
+                            <div class="flex gap-4 items-start">
+                                <div class="w-12 h-6 rounded bg-purple-100 border border-purple-200 text-purple-700 text-xs font-bold flex items-center justify-center shrink-0 shadow-sm">長期</div>
+                                <p class="text-sm text-stone-700 leading-relaxed font-medium">${data.strategicRecommendations.longTerm}</p>
                             </div>
                         </div>
                     </div>
@@ -781,12 +777,12 @@
             container.innerHTML = filteredReports.map(r => {
                 const isCurrent = state.currentReport && state.currentReport.reportId === r.reportId;
                 return `
-                    <button onclick="window.loadReport('${r.reportId}')" class="w-full text-left p-3 rounded-lg mb-2 transition-colors border ${isCurrent ? 'bg-slate-800 border-slate-600' : 'bg-transparent border-transparent hover:bg-slate-800 hover:border-slate-700'}">
+                    <button onclick="window.loadReport('${r.reportId}')" class="w-full text-left p-3 rounded-lg mb-2 transition-all border shadow-sm ${isCurrent ? 'bg-white border-emerald-300 shadow-md transform -translate-y-0.5' : 'bg-white/50 border-stone-200 hover:bg-white hover:border-stone-300'}">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-sm font-bold ${isCurrent ? 'text-emerald-400' : 'text-slate-300'}">${r.reportId}</span>
-                            <span class="text-[10px] text-slate-500">${new Date(r.createdTime).toLocaleDateString()}</span>
+                            <span class="text-sm font-bold ${isCurrent ? 'text-emerald-600' : 'text-stone-700'}">${r.reportId}</span>
+                            <span class="text-[10px] font-medium text-stone-400">${new Date(r.createdTime).toLocaleDateString()}</span>
                         </div>
-                        <p class="text-xs text-slate-400 truncate">${r.summary}</p>
+                        <p class="text-xs text-stone-500 truncate font-medium">${r.summary}</p>
                     </button>
                 `;
             }).join('');
@@ -803,7 +799,6 @@
             }
         };
 
-        // Event Bindings
         function bindEvents() {
             document.getElementById('history-search').addEventListener('input', renderHistoryList);
             document.getElementById('trigger-gemini-btn').addEventListener('click', simulateGeminiAnalysis);
@@ -834,7 +829,7 @@
                 
                 toggleBtnText.textContent = "返回首頁";
                 toggleBtnIcon.className = "fa-solid fa-house";
-                window.fetchUsers(); // 載入會員資料
+                window.fetchUsers();
             } else {
                 adminView.classList.add('hidden');
                 adminView.classList.remove('fade-enter-active');
@@ -851,10 +846,9 @@
             const listContainer = document.getElementById('admin-users-list');
             if (!db) return;
             
-            listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-500"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> 載入會員資料中...</td></tr>`;
+            listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-stone-500 font-medium"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> 載入會員資料中...</td></tr>`;
             
             try {
-                // Rule 2: No Complex Queries. Fetch all, sort in memory.
                 const q = query(collection(db, getUsersCollectionPath()));
                 const querySnapshot = await getDocs(q);
                 
@@ -866,36 +860,36 @@
                 users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                 if (users.length === 0) {
-                    listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">目前尚無註冊會員</td></tr>`;
+                    listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-stone-500 font-medium">目前尚無註冊會員</td></tr>`;
                     return;
                 }
 
                 listContainer.innerHTML = users.map(user => `
-                    <tr class="hover:bg-slate-800/30 transition">
+                    <tr class="hover:bg-stone-50 transition bg-white">
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs uppercase">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs uppercase border border-emerald-200">
                                     ${user.name ? user.name.substring(0, 1) : 'U'}
                                 </div>
-                                <span class="font-medium text-slate-200">${user.name || '未命名'}</span>
+                                <span class="font-bold text-stone-700">${user.name || '未命名'}</span>
                             </div>
                         </td>
-                        <td class="px-4 py-3 text-slate-400">${user.email}</td>
+                        <td class="px-4 py-3 text-stone-500 font-medium">${user.email}</td>
                         <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                            <span class="px-2 py-1 rounded text-[10px] bg-cyan-50 text-cyan-700 border border-cyan-200 font-bold shadow-sm">
                                 ${user.role || '一般會員'}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-slate-400">${new Date(user.createdAt).toLocaleString()}</td>
+                        <td class="px-4 py-3 text-stone-500 font-medium">${new Date(user.createdAt).toLocaleString()}</td>
                         <td class="px-4 py-3 text-right">
-                            <span class="text-emerald-400 text-xs flex items-center justify-end gap-1"><i class="fa-solid fa-circle text-[8px]"></i> 正常</span>
+                            <span class="text-emerald-600 font-bold text-xs flex items-center justify-end gap-1"><i class="fa-solid fa-circle text-[8px]"></i> 正常</span>
                         </td>
                     </tr>
                 `).join('');
 
             } catch (error) {
                 console.error("Error fetching users:", error);
-                listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-red-400"><i class="fa-solid fa-triangle-exclamation mr-2"></i> 讀取失敗，請確認資料庫連線或權限</td></tr>`;
+                listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i> 讀取失敗，請確認資料庫連線或權限</td></tr>`;
             }
         };
 
@@ -937,10 +931,10 @@
             function setAuthMode(register) {
                 isRegisterMode = register;
                 if (register) {
-                    tabRegister.classList.add('bg-slate-800', 'text-emerald-400', 'shadow-sm');
-                    tabRegister.classList.remove('text-slate-400');
-                    tabLogin.classList.remove('bg-slate-800', 'text-emerald-400', 'shadow-sm');
-                    tabLogin.classList.add('text-slate-400');
+                    tabRegister.classList.add('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
+                    tabRegister.classList.remove('text-stone-500');
+                    tabLogin.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
+                    tabLogin.classList.add('text-stone-500');
                     
                     nameField.classList.remove('hidden');
                     confirmPasswordField.classList.remove('hidden');
@@ -952,10 +946,10 @@
                     guestDivider.classList.add('hidden');
                     guestBtn.classList.add('hidden');
                 } else {
-                    tabLogin.classList.add('bg-slate-800', 'text-emerald-400', 'shadow-sm');
-                    tabLogin.classList.remove('text-slate-400');
-                    tabRegister.classList.remove('bg-slate-800', 'text-emerald-400', 'shadow-sm');
-                    tabRegister.classList.add('text-slate-400');
+                    tabLogin.classList.add('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
+                    tabLogin.classList.remove('text-stone-500');
+                    tabRegister.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
+                    tabRegister.classList.add('text-stone-500');
                     
                     nameField.classList.add('hidden');
                     confirmPasswordField.classList.add('hidden');
@@ -994,11 +988,9 @@
 
                     try {
                         if (isRegisterMode) {
-                            // Register Flow
                             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                             const user = userCredential.user;
                             
-                            // Save user profile to Firestore (Strict Path)
                             if (db) {
                                 await setDoc(doc(db, getUsersCollectionPath(), user.uid), {
                                     name: name || "新會員",
@@ -1009,11 +1001,9 @@
                             }
                             showToast("註冊成功！歡迎加入。");
                         } else {
-                            // Login Flow
                             await signInWithEmailAndPassword(auth, email, password);
                             showToast("登入成功！");
                         }
-                        // UI will update via onAuthStateChanged automatically
                     } catch (error) {
                         console.error("Auth error:", error);
                         if (error.code === 'auth/email-already-in-use') {
@@ -1038,7 +1028,6 @@
                     try {
                         await signInAnonymously(auth);
                         showToast("訪客登入成功！");
-                        // UI will update via onAuthStateChanged automatically
                     } catch (error) {
                         console.error("Guest login error:", error);
                         showToast("訪客登入失敗。", "error");
@@ -1053,17 +1042,22 @@
             const toast = document.getElementById('toast');
             const msgEl = document.getElementById('toast-message');
             const iconEl = toast.querySelector('i');
+            const toastBox = toast.querySelector('div');
             
             msgEl.textContent = message;
             
             if (type === 'error') {
-                iconEl.className = 'fa-solid fa-triangle-exclamation text-red-400';
-                toast.querySelector('.glass-panel').classList.replace('border-emerald-500/50', 'border-red-500/50');
-                toast.querySelector('.glass-panel').classList.replace('shadow-emerald-500/10', 'shadow-red-500/10');
+                iconEl.className = 'fa-solid fa-triangle-exclamation text-red-500 text-lg';
+                toastBox.classList.replace('border-stone-200', 'border-red-200');
+                toastBox.classList.add('bg-red-50');
+                toastBox.classList.remove('bg-white/95');
+                msgEl.classList.add('text-red-800');
             } else {
-                iconEl.className = 'fa-solid fa-circle-check text-emerald-400';
-                toast.querySelector('.glass-panel').classList.replace('border-red-500/50', 'border-emerald-500/50');
-                toast.querySelector('.glass-panel').classList.replace('shadow-red-500/10', 'shadow-emerald-500/10');
+                iconEl.className = 'fa-solid fa-circle-check text-emerald-600 text-lg';
+                toastBox.classList.replace('border-red-200', 'border-stone-200');
+                toastBox.classList.add('bg-white/95');
+                toastBox.classList.remove('bg-red-50');
+                msgEl.classList.remove('text-red-800');
             }
 
             toast.style.transform = 'translateY(0)';
@@ -1081,24 +1075,24 @@
             const originalContent = btn.innerHTML;
             
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Flash 引擎深度研析中...`;
-            btn.classList.replace('from-emerald-600', 'from-slate-700');
-            btn.classList.replace('to-cyan-600', 'to-slate-600');
+            btn.innerHTML = `<i class="fa-solid fa-bolt text-yellow-300"></i> Flash 引擎高速解析中...`;
+            btn.classList.replace('from-emerald-600', 'from-stone-400');
+            btn.classList.replace('to-cyan-600', 'to-stone-500');
+            btn.classList.replace('hover:from-emerald-700', 'hover:from-stone-500');
+            btn.classList.replace('hover:to-cyan-700', 'hover:to-stone-600');
 
             try {
-                // Determine next report ID (e.g. if highest is 2026-W08, make it 2026-W09)
                 let nextWeek = 1;
                 if (state.reports.length > 0) {
-                    const lastId = state.reports[0].reportId; // Assuming sorted descending
+                    const lastId = state.reports[0].reportId;
                     const match = lastId.match(/W(\d+)/);
                     if (match) nextWeek = parseInt(match[1]) + 1;
                 }
                 const newId = `2026-W${nextWeek.toString().padStart(2, '0')}`;
 
-                // Simulate network latency for Flash model (0.8s - much faster than Pro)
+                // Gemini 3.5 Flash 高速模擬 (只需 0.8 秒)
                 await new Promise(resolve => setTimeout(resolve, 800));
 
-                // Simulated Gemini JSON response (handling PRD 7.1 Malformed JSON concept implicitly by providing robust structure)
                 const generatedReport = {
                     reportId: newId,
                     createdTime: new Date().toISOString(),
@@ -1142,35 +1136,32 @@
                     }
                 };
 
-                // Rule 1: Save to Firestore
                 if (db) {
                     const docRef = doc(db, getCollectionPath(), generatedReport.reportId);
                     await setDoc(docRef, generatedReport);
                 }
 
-                // Update Local State
-                state.reports.unshift(generatedReport); // Add to top
+                state.reports.unshift(generatedReport);
                 state.currentReport = generatedReport;
-                state.activeFilter = null; // reset filter
+                state.activeFilter = null;
                 
                 renderFilterTags();
                 renderUI();
-                showToast(`成功生成 ${newId} 最新情報！`);
+                showToast(`成功極速生成 ${newId} 最新情報！`);
 
             } catch (error) {
                 console.error("Agent execution failed:", error);
-                // PRD 7.1 & 7.2 Defensive UI
                 showToast("系統正在自動校準最新情報，目前呈現為歷史備份資料。", "error");
             } finally {
-                // Restore button state
                 btn.disabled = false;
                 btn.innerHTML = originalContent;
-                btn.classList.replace('from-slate-700', 'from-emerald-600');
-                btn.classList.replace('to-slate-600', 'to-cyan-600');
+                btn.classList.replace('from-stone-400', 'from-emerald-600');
+                btn.classList.replace('to-stone-500', 'to-cyan-600');
+                btn.classList.replace('hover:from-stone-500', 'hover:from-emerald-700');
+                btn.classList.replace('hover:to-stone-600', 'hover:to-cyan-700');
             }
         }
 
-        // Initialize App on DOM Content Loaded
         document.addEventListener('DOMContentLoaded', initApp);
 
     </script>
