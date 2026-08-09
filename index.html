@@ -609,44 +609,44 @@
             createdTime: "2026-02-22T08:00:00Z",
             author: "Casey Chen (Global Power Expert)",
             authorBio: "全球電網韌性與淨零工程首席分析師",
-            summary: "本週由 Gemini-3.5-flash AI 代理分析指出：全球核心焦點已從單純「發電量」轉向「系統穩定度」。AI 資料中心 (AI DC) 用電呈指數型增長，對區域電網慣性(Inertia)與頻率控制造成空前壓力。歐美先進電網正加速推動「核能與AI資料中心共站(Co-location)」及「跨國虛擬電廠(VPP)動態聚合」技術。台灣面臨北部電網容量瓶頸，亟需從「增加電源」轉向「系統韌性與分散式資源調度(DERMS)」。",
+            summary: "本週深度追蹤全球十大 ISO/TSO 動態：歐美電網營運商正全面轉向「系統服務(System Services)」與「節點邊際電價(LMP)」改革。CAISO(加州)與 PJM(美東)面臨 AI 資料中心爆炸性負載，正加速推進動態線路額定(DLR)與 VPP 批發市場整合(FERC 2222)。對標台灣，北部電網的「空間錯位」急需引入區域價格訊號與高階併網規範。",
             globalIntelligence: [
                 {
-                    region: "歐洲", flag: "🇪🇺",
-                    title: "ENTSO-E 發布泛歐 VPP 併網與合成慣性標準",
-                    content: "歐洲輸電網營運商聯盟(ENTSO-E)強制要求新建大型 VPP 必須提供「合成慣性(Synthetic Inertia)」。透過構網型逆變器(Grid-forming Inverters)控制演算法，使分散式儲能與風機在電網頻率驟降的250毫秒內釋放實功，成功將電網最低頻率(Nadir)提升0.15Hz。",
-                    metrics: { resilienceScore: 92, vppAdoptionRate: "68%" },
-                    tags: ["虛擬電廠", "電網韌性", "電網慣性"]
-                },
-                {
-                    region: "美國", flag: "🇺🇸",
-                    title: "PJM 預警 AI 用電飆升，核能微電網成解方",
-                    content: "全美最大區域電網 PJM 警告未來三年 AI DC 將新增逾 10GW 負載。AWS 與微軟相繼推進「核能與資料中心共站(Co-location)」的直供計畫。同時，FERC 第2222號命令加速落地，要求各州解除 VPP 參與批發市場的限制。",
-                    metrics: { resilienceScore: 88, vppAdoptionRate: "45%" },
-                    tags: ["AI DC", "AI用電", "虛擬電廠"]
-                },
-                {
-                    region: "日本", flag: "🇯🇵",
-                    title: "九州高佔比光電解方：AI 動態慣性預估系統",
-                    content: "面對高達 80% 的太陽能滲透率導致慣性大幅流失，九州電力導入 AI 邊緣運算預測模型。以 5 分鐘為週期精準預估剩餘系統慣量，並動態喚醒工業用戶的需量反應(DR)與抽蓄水力，成功避免大規模棄光。",
-                    metrics: { resilienceScore: 85, vppAdoptionRate: "42%" },
-                    tags: ["電網慣性", "AI用電", "電網韌性"]
-                },
-                {
-                    region: "澳洲", flag: "🇦🇺",
-                    title: "南澳達成 100% 再生能源，調相機成定海神針",
-                    content: "AEMO 證實南澳電網連續 72 小時完全由風光及分散式電池(VPP)供電。關鍵在於安裝了 4 座大型同步調相機(Synchronous Condensers)，不發電但提供轉子動能，補足了缺乏燃煤機組時所需的系統強度與短路容量(Short Circuit Ratio)。",
-                    metrics: { resilienceScore: 95, vppAdoptionRate: "75%" },
+                    region: "英國 (National Grid ESO)", flag: "🇬🇧",
+                    title: "發布 Pathfinder 計畫：向市場採購「純慣性」",
+                    content: "為達成 2025 年無碳運轉，英國 ESO 首創全球「穩定性(Stability)市場」。不再綁定實功發電，而是向飛輪、同步調相機與構網型(GFM)儲能採購短路容量(Short Circuit Level)與電網慣性，已成功節省數億英鎊的基礎建設升級費。",
+                    metrics: { resilienceScore: 95, vppAdoptionRate: "68%" },
                     tags: ["電網韌性", "電網慣性"]
+                },
+                {
+                    region: "美國加州 (CAISO)", flag: "🇺🇸",
+                    title: "AI 驅動的 DLR (動態線路額定) 大規模實證",
+                    content: "面對嚴重輸電壅塞，CAISO 放棄耗時的實體擴建，轉而導入 AI 感測器即時運算氣象與線路垂度。透過 DLR 技術，現有 345kV 線路傳輸容量在特定天候下提升了 20-30%，大幅緩解太陽能「鴨子曲線」的棄載危機。",
+                    metrics: { resilienceScore: 88, vppAdoptionRate: "52%" },
+                    tags: ["電網韌性", "AI用電"]
+                },
+                {
+                    region: "澳洲 (AEMO)", flag: "🇦🇺",
+                    title: "Project Symphony：民生 VPP 正式納入調度",
+                    content: "西澳電網面臨「最低系統負載(Minimum System Load)」危機(白天光電過剩導致發電機被迫解聯)。AEMO 成功將超過萬戶的屋頂光電、家用儲能與熱水器聚合成 VPP，做為可視化的「負載增長/減少」資源參與即時市場調度。",
+                    metrics: { resilienceScore: 92, vppAdoptionRate: "75%" },
+                    tags: ["虛擬電廠", "電網韌性"]
+                },
+                {
+                    region: "日本 (OCCTO)", flag: "🇯🇵",
+                    title: "實施 Connect & Manage (N-1 電網管理放寬)",
+                    content: "日本電力廣域營運推進機關(OCCTO)突破傳統「N-1 安全準則」的絕對限制。允許再生能源在平時全額輸出，僅在電網發生單一設備故障(N-1)的瞬間，透過控制系統(RAS)瞬間切離部分綠電，釋放了極大的潛在併網容量。",
+                    metrics: { resilienceScore: 85, vppAdoptionRate: "42%" },
+                    tags: ["電網韌性"]
                 }
             ],
             taiwanAnalysis: {
-                currentStatus: "台灣目前陷入嚴重的「南電北送」傳輸瓶頸。北部科技廊帶(桃園、新竹)的 AI 資料中心擴建申請量已遠超區域輸電網(345kV/161kV)負荷。同時，隨著大型燃煤與核能機組陸續除役，系統整體電網慣性正處於歷史低點，對於大型機組跳脫(N-1/N-2 事故)的耐受能力大幅減弱。",
-                gapAnalysis: "相比歐美已將 VPP 與 AI DC 深度綁定並納入調度，台灣的輔助服務市場（如 dReg、E-dReg）仍以獨立大型儲能為主，缺乏將電動車(EV)、商辦空調等「螞蟻雄兵」聚合成 VPP 的誘因與通訊標準 (如 OpenADR 2.0b 的普及化)，且缺乏針對「慣性」的市場計價機制。",
+                currentStatus: "台灣目前陷入嚴峻的「南電北送」物理傳輸瓶頸。北部科技廊帶的 AI 資料中心(AI DC)與半導體擴建量，已遠超超高壓幹線(345kV)的輸送餘裕。台電(TPC)為維持 N-1 安全準則，被迫暫停部分北部 AI DC 供電申請，區域供需嚴重失衡。",
+                gapAnalysis: "相比 PJM 或 CAISO 採用「節點邊際電價 (Locational Marginal Pricing, LMP)」以價格引導資源建置，台灣單一電價無法反映區域壅塞。此外，針對大型 AI 用戶，缺乏要求其配備「構網型儲能(GFM)」或「動態需量反應」的強制力，系統韌性高度依賴單向擴建。",
                 strategicRecommendations: {
-                    shortTerm: "【解除容量緊箍咒】針對北部 AI DC 設立「彈性用電條款」，強制要求新建資料中心須自備 20% 以上的高功率儲能或燃料電池，並在系統夜尖峰時段無條件接受 TSO (台電) 統一調度。",
-                    mediumTerm: "【建構動態慣性監測網與 FFR】全面引進 AI 慣性估測技術。在強風光時段，若系統慣量低於安全門檻，應啟動「快速頻率響應(FFR)」資源，或將部分即將除役的傳統機組改裝為調相機(Synchronous Condenser)持續運轉，提供電壓支撐。",
-                    longTerm: "【推動全民 VPP 與慣性市場化】修法擴大電力交易平台參與者資格，將 V2G (Vehicle-to-Grid) 納入法規。參考英國國家電網(National Grid)啟動「穩定性(Stability)拍賣市場」，針對能提供合成慣性的構網型設備給予高額容量費率，引導民間資金投資高階電網支撐設施。"
+                    shortTerm: "【實施區域彈性費率與 GFM 規範】針對北部壅塞區，試辦「區域容量加給」或引進 LMP 雛型，提供誘因讓分散式電源(DER)建置於北部。立即修訂併網法規，要求新建之大型儲能系統(E-dReg)必須具備構網型(Grid-forming)逆變器能力。",
+                    mediumTerm: "【推動 AI DC 動態負載與 Co-location】參考美歐趨勢，開放 AI 資料中心與大型綠能電廠、甚至新型核能(SMR)「共站(Co-location)直供」，繞開台電輸電網。並要求 AI DC 與台電調度中心連線，提供 20% 負載的秒級快降能力(Load Shedding)。",
+                    longTerm: "【布建 DLR 與全民 VPP 批發市場】全面在 345kV 幹線導入「動態線路額定(DLR)」，利用 AI 最大化既有電網價值。跟進美國 FERC 2222 命令，修法打破聚合商(Aggregators)門檻，讓電動車(V2G)與智慧家電聚合成巨型 VPP，直接競價參與輔助服務市場。"
                 }
             },
             keywordsMetadata: {
@@ -1239,41 +1239,41 @@
                     createdTime: new Date().toISOString(),
                     author: "Casey Chen (Global Power Expert)",
                     authorBio: "全球電網韌性與淨零工程首席分析師",
-                    summary: `本週由 Gemini-3.5-flash AI 代理分析指出：亞太地區正迎來「儲能與V2G」雙軌並進的電網韌性革命。極端氣候使 AI 預測模型的價值極大化；同時，英國針對零碳排運轉提出的「新世代慣性拍賣市場」，為全球提供了電網輔助服務的新定價典範。`,
+                    summary: `本週 Gemini-3.5-flash 追蹤重點：美國 PJM 容量市場價格飆升 800%，凸顯 AI 負載對電網的猛烈衝擊；德州 ERCOT 則透過擴大 ADER (分散式資源聚合) 計畫迎戰極端氣候。全球 ISO 的解方高度一致：強制將 AI 用電與「靈活資源 (Flexible Resources)」深度綁定。`,
                     globalIntelligence: [
                         {
-                            region: "英國", flag: "🇬🇧",
-                            title: "啟動全球首個「穩定性(Stability)」拍賣市場",
-                            content: "為達成 2026 年無碳運轉目標，英國電網不再僅購買「電量」，而是向市場購買「慣性」。風電場與儲能業者只要能透過構網型逆變器(Grid-forming Inverters)提供電壓與頻率支撐，即可獲得長期合約。",
-                            metrics: { resilienceScore: 94, vppAdoptionRate: "58%" },
-                            tags: ["電網慣性", "電網韌性", "虛擬電廠"]
+                            region: "美東 (PJM)", flag: "🇺🇸",
+                            title: "容量市場價格暴漲，AI 負載吞噬備用容量",
+                            content: "全美最大 ISO PJM 最新容量拍賣結果顯示，結算價格較去年飆漲近 9 倍。主因是傳統燃煤機組加速退役，而 AI 數據中心的用電申請(Queue)高達數十 GW。PJM 正推動「快速審查路徑」，允許自備 24/7 零碳排電源(CFE)的 AI DC 優先併網。",
+                            metrics: { resilienceScore: 78, vppAdoptionRate: "38%" },
+                            tags: ["AI DC", "AI用電", "電網韌性"]
                         },
                         {
-                            region: "韓國", flag: "🇰🇷",
-                            title: "濟州島 100% 綠能實證：全市級 AI 虛擬電廠",
-                            content: "為解決嚴重的風電棄載，KEPCO 整合全市電動車(V2G)與百萬瓦級儲能。AI 預測中心提前 24 小時精準規劃充放電排程，成功將尖峰負載削平 8%，並減少 15% 備用機組燃料成本。",
-                            metrics: { resilienceScore: 82, vppAdoptionRate: "55%" },
-                            tags: ["虛擬電廠", "AI用電"]
+                            region: "德州 (ERCOT)", flag: "🇺🇸",
+                            title: "ADER 專案擴容，特斯拉 VPP 成為調度主力",
+                            content: "面對酷暑與獨立電網的脆弱性，ERCOT 大幅放寬「聚合分散式能源(ADER)」參與備轉容量市場的限制。超過上萬組 Powerwall 與智慧溫控設備組成的 VPP，能在系統頻率下降的數秒內自動削減負載，成為防範大停電的第一道防線。",
+                            metrics: { resilienceScore: 85, vppAdoptionRate: "65%" },
+                            tags: ["虛擬電廠", "電網韌性"]
                         },
                         {
-                            region: "中國", flag: "🇨🇳",
-                            title: "特高壓(UHV)混聯電網結合百兆瓦級飛輪儲能",
-                            content: "針對西北地區新能源大發導致的「低慣性、低阻尼」雙低問題，國家電網部署百兆瓦級獨立飛輪儲能電站。利用飛輪毫秒級的物理動能釋放，補償長距離輸電時的頻率震盪。",
-                            metrics: { resilienceScore: 78, vppAdoptionRate: "35%" },
-                            tags: ["電網慣性", "電網韌性"]
+                            region: "歐洲 (ENTSO-E)", flag: "🇪🇺",
+                            title: "跨國頻率控制儲備 (FCR) 引入電動車隊",
+                            content: "歐洲聯網(ENTSO-E)進一步整合跨國輔助服務市場。最新規範允許跨國界聚合電動車充電樁(V2G)，當歐洲大陸頻率偏離 50Hz 時，百萬台 EV 能以「分散式慣性」的形式，瞬間停止充電甚至反向放電，大幅降低對天然氣快啟機組的依賴。",
+                            metrics: { resilienceScore: 93, vppAdoptionRate: "58%" },
+                            tags: ["電網慣性", "虛擬電廠"]
                         }
                     ],
                     taiwanAnalysis: {
-                        currentStatus: "近期夏季熱浪與午後雷陣雨交替，導致光電發電量急劇波動。台電調度中心面臨「夜尖峰」加上「天氣突變」的雙重壓力，單靠抽蓄水力與傳統燃氣機組的爬升率(Ramp Rate)已顯得吃力。",
-                        gapAnalysis: "台灣在「構網型逆變器(Grid-forming Inverter)」的法規要求上落後於英國與澳洲。目前併網的儲能多為「跟網型(Grid-following)」，在電網發生嚴重故障時無法主動建立電壓與頻率，可能引發連鎖跳脫反應。",
+                        currentStatus: "台灣正步入夏季高負載期，太陽能滲透率在中午時段可達 30-40%。台電面臨的不再是正午缺電，而是傍晚光電退場時，系統需在 2-3 小時內填補 7-8 GW 缺口的「極端爬坡(Ramp Rate)考驗」。同時，大量 AI 伺服器導入造成基礎負載(Base Load)顯著墊高。",
+                        gapAnalysis: "相較於 ERCOT 將數萬戶家庭儲能化為備轉容量，台灣的輔助服務市場(dReg)過度集中於少數企業的百萬瓦級(MW)大儲能案場。缺乏針對商辦空調、電動車充電等「螞蟻雄兵」的聚合通訊標準(如 OpenADR 的普及)，導致民間分散式彈性未能解放。",
                         strategicRecommendations: {
-                            shortTerm: "【優化高頻數據預測】導入邊緣運算 AI 模型，結合微氣象站數據，將再生能源發電預測與區域負載預測的解析度提升至 15 分鐘等級，減少熱機備轉容量的浪費。",
-                            mediumTerm: "【推動構網型儲能(GFM)補助】參考英國穩定性市場，針對新建之大型儲能系統，若採用構網型逆變器並能提供系統慣性，給予容量費率加成(Premium)，引導民間資金投資高階電網支撐設備。",
-                            longTerm: "【打造韌性微電網聚落】針對竹科、南科等半導體與 AI 產業重鎮，強制劃設「孤島運轉(Islanding)」測試區。利用廠區內龐大的 UPS、備用發電機與屋頂光電組成 VPP，確保主電網崩潰時維持自主供電。"
+                            shortTerm: "【時間電價極端化與 AI 排程】拉大時間電價(TOU)的尖離峰價差，設定「超級尖峰(Super Peak)」費率。引導 AI 資料中心將非緊急運算任務(如模型訓練)排程至中午光電充裕時段，降低傍晚電網爬坡壓力。",
+                            mediumTerm: "【確立 24/7 CFE 規範與 V2G 落地】針對新設 AI 資料中心，應效法歐美導入 24/7 無碳能源(Carbon-Free Energy)匹配要求，而非僅購買年度綠電憑證。盡速修訂《電業法》相關子法，開放雙向充放電(V2G)設備商轉，釋放百萬輛電動車的儲能潛力。",
+                            longTerm: "【建構國家級 DERMS 平台】台電應從單純的「電力供應者」轉型為「平台營運商(DSO)」。建構分散式資源管理系統(DERMS)，利用 AI 預測各饋線的即時供需，實現從高壓輸電端到低壓配電端的全域動態平衡，徹底解決區域壅塞。"
                         }
                     },
                     keywordsMetadata: {
-                        "虛擬電廠": true, "AI用電": true, "電網慣性": true, "電網韌性": true
+                        "虛擬電廠": true, "AI用電": true, "電網慣性": true, "電網韌性": true, "AI DC": true
                     }
                 };
 
