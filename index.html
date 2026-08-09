@@ -5,511 +5,258 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>台灣電力最新情報分析 | 淨零工程版</title>
     
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Tailwind Config for specific brand colors and fonts -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        stone: {
-                            50: '#fafaf9',
-                            100: '#f5f5f4',
-                            200: '#e7e5e4',
-                            300: '#d6d3d1',
-                            400: '#a8a29e',
-                            500: '#78716c',
-                            600: '#57534e',
-                            700: '#44403c',
-                            800: '#292524',
-                            900: '#1c1917',
-                        },
-                        emerald: {
-                            500: '#10b981',
-                            600: '#059669',
-                            700: '#047857',
-                        },
-                        cyan: {
-                            500: '#06b6d4',
-                            600: '#0891b2',
-                            700: '#0e7490',
+                        brand: {
+                            green: '#10b981', // emerald-500
+                            blue: '#0891b2',  // cyan-600
                         }
                     }
                 }
             }
         }
     </script>
-
-    <!-- Custom CSS for Scrollbars & Glassmorphism -->
     <style>
-        body {
-            background-color: #fafaf9; /* stone-50 */
-            color: #292524; /* stone-800 */
-        }
+        body { font-family: 'Inter', sans-serif; }
         
-        /* Custom Scrollbar - Light Theme */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f5f5f4; /* stone-100 */
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #d6d3d1; /* stone-300 */
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #059669; /* emerald-600 */
-        }
-
-        /* Glass Panel utility - Light Theme */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+        
         .glass-panel {
-            background-color: rgba(255, 255, 255, 0.85); /* white/85 */
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
-            border: 1px solid #e7e5e4; /* stone-200 */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(231, 229, 228, 0.8);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
-        /* Smooth Transitions */
-        .fade-enter {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        .fade-enter-active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 300ms, transform 300ms;
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Accordion transition */
-        .accordion-content {
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-        }
-        .accordion-content.open {
-            max-height: 500px;
-            opacity: 1;
-        }
-
-        /* Loading Skeleton Animation - Light Theme */
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-        .skeleton {
-            background: #e7e5e4; /* stone-200 */
-            background-image: linear-gradient(to right, #e7e5e4 0%, #f5f5f4 20%, #e7e5e4 40%, #e7e5e4 100%);
-            background-repeat: no-repeat;
-            background-size: 1000px 100%; 
-            animation: shimmer 2s infinite linear forwards;
+        .toast-slide { animation: toastSlide 0.3s ease-out forwards; }
+        @keyframes toastSlide {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col font-sans">
+<body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col relative overflow-x-hidden">
 
-    <!-- Login Overlay -->
-    <div id="login-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-stone-100/80 backdrop-blur-md transition-opacity duration-500">
-        <!-- background effects -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px]"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px]"></div>
-        </div>
-        
-        <div class="glass-panel p-8 rounded-2xl w-full max-w-sm relative z-10">
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 mx-auto rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-2xl mb-4 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-                    <i class="fa-solid fa-bolt-lightning"></i>
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-bolt text-lg"></i>
                 </div>
-                <p class="text-xs text-stone-500 font-medium tracking-widest uppercase mb-4">TPRI Intelligence</p>
-                
-                <!-- Auth Tabs -->
-                <div class="flex p-1 bg-stone-100 rounded-lg border border-stone-200 mb-2">
-                    <button type="button" id="tab-login" class="flex-1 py-2 text-sm font-medium rounded-md bg-white text-emerald-700 shadow-sm transition-all border border-stone-200/50">登入</button>
-                    <button type="button" id="tab-register" class="flex-1 py-2 text-sm font-medium rounded-md text-stone-500 hover:text-stone-700 transition-all">註冊</button>
+                <div>
+                    <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-cyan-700 tracking-tight">
+                        電力最新情報
+                    </h1>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-stone-500 font-medium tracking-wide">淨零工程決策看板</span>
+                        <div id="db-status-badge" class="px-2 py-0.5 rounded text-[10px] border border-stone-200 text-stone-600 bg-stone-100 flex items-center gap-1 transition-all duration-300">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i> 系統初始化
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <form id="login-form" class="flex flex-col gap-4">
-                <div id="name-field" class="hidden">
-                    <label class="block text-xs font-medium text-stone-500 mb-1">使用者名稱 (Name)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3 top-2.5 text-stone-400 text-sm"></i>
-                        <input type="text" id="login-name" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="您的名字">
-                    </div>
+            <div class="hidden md:flex items-center gap-4">
+                <div id="filter-container" class="flex gap-2">
+                    <!-- Dynamic Filters -->
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-stone-500 mb-1">電子郵件 (Email)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-envelope absolute left-3 top-2.5 text-stone-400 text-sm"></i>
-                        <input type="email" id="login-email" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="admin@tpri.com" required>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-stone-500 mb-1">密碼 (Password)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3 top-2.5 text-stone-400 text-sm"></i>
-                        <input type="password" id="login-password" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="••••••••" required>
-                    </div>
-                </div>
-
-                <div id="confirm-password-field" class="hidden">
-                    <label class="block text-xs font-medium text-stone-500 mb-1">確認密碼 (Confirm Password)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3 top-2.5 text-stone-400 text-sm"></i>
-                        <input type="password" id="login-confirm-password" class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition" placeholder="••••••••">
-                    </div>
-                </div>
-                
-                <div class="flex justify-between items-center mt-1" id="auth-options">
-                    <label class="flex items-center gap-2 cursor-pointer group">
-                        <input type="checkbox" class="w-3.5 h-3.5 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500/50 cursor-pointer">
-                        <span class="text-xs text-stone-500 group-hover:text-stone-700 transition">記住我</span>
-                    </label>
-                    <a href="#" class="text-xs text-cyan-600 hover:text-cyan-700 transition">忘記密碼？</a>
-                </div>
-
-                <button type="submit" id="auth-submit-btn" class="w-full py-2.5 mt-2 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-medium text-sm transition shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 group">
-                    <i class="fa-solid fa-right-to-bracket group-hover:translate-x-1 transition-transform"></i> <span id="auth-btn-text">登入系統</span>
+                <div class="h-6 w-px bg-stone-300"></div>
+                <button onclick="toggleUserGuide()" class="text-stone-500 hover:text-emerald-600 transition-colors flex items-center gap-1.5 text-sm font-medium">
+                    <i class="fa-regular fa-circle-question"></i> 使用說明
                 </button>
-
-                <div class="relative my-3" id="guest-divider">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-stone-200"></div>
-                    </div>
-                    <div class="relative flex justify-center text-xs">
-                        <span class="px-2 bg-white text-stone-400">或</span>
-                    </div>
-                </div>
-                
-                <button type="button" id="guest-login-btn" class="w-full py-2.5 rounded-lg bg-white hover:bg-stone-50 border border-stone-300 text-stone-600 font-medium text-sm transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-secret"></i> 訪客匿名進入
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Header / Nav -->
-    <header class="sticky top-0 z-50 glass-panel border-b-0 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-                    <i class="fa-solid fa-bolt-lightning"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-xl font-bold text-stone-800 tracking-wide">電力最新情報</h1>
-                        <span id="db-status-badge" class="px-2 py-0.5 rounded text-[10px] border border-stone-200 text-stone-500 bg-white flex items-center gap-1 transition-all duration-300 shadow-sm">
-                            <i class="fa-solid fa-circle-notch fa-spin"></i> 檢查連線...
-                        </span>
-                    </div>
-                    <p class="text-xs text-stone-500">Net-Zero Engineering Intelligence</p>
-                </div>
-            </div>
-
-            <!-- Header Right Section -->
-            <div class="flex items-center gap-4">
-                <!-- Keyword Tags (Dynamic Filter) -->
-                <div class="flex flex-wrap justify-center gap-2" id="keyword-filters">
-                    <!-- Buttons will be injected here via JS -->
-                </div>
-
-                <!-- Guide Button (新增使用說明按鈕) -->
-                <button id="guide-modal-btn" class="px-3 py-1.5 rounded-lg bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50 text-xs font-medium transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-circle-question"></i> <span class="hidden sm:inline">使用說明</span>
-                </button>
-
-                <!-- User Actions (Hidden by default) -->
-                <div id="user-actions" class="hidden flex items-center gap-2 pl-4 border-l border-stone-200">
-                    <button id="admin-toggle-btn" class="px-3 py-1.5 rounded-lg bg-white text-cyan-700 border border-stone-200 hover:bg-stone-50 hover:text-cyan-800 text-xs transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-gauge-high"></i> <span id="admin-toggle-text">後台管理</span>
-                    </button>
-                    <button id="logout-btn" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-red-600 border border-stone-200 hover:bg-red-50 hover:border-red-200 text-xs transition shadow-sm">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 relative">
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8">
         
-        <!-- Main Dashboard View -->
-        <div id="main-view" class="w-full flex flex-col lg:flex-row gap-6 fade-enter fade-enter-active">
-            <!-- Left Column (70%) -->
-            <div class="w-full lg:w-8/12 flex flex-col gap-6">
-                
-                <!-- Hero Section -->
-                <section class="glass-panel rounded-2xl p-6 relative overflow-hidden border-emerald-200 border">
-                    <div class="absolute top-0 right-0 p-4 opacity-[0.05] text-8xl text-emerald-700 pointer-events-none">
-                        <i class="fa-solid fa-tower-cell"></i>
-                    </div>
-                    
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold tracking-wide">
-                            最新發布
-                        </span>
-                        <h2 class="text-2xl md:text-3xl font-bold text-stone-800 tracking-tight" id="hero-report-id">
-                            載入中...
-                        </h2>
-                        <!-- 新增: 匯出文件按鈕 -->
-                        <button id="download-doc-btn" class="ml-auto px-3 py-1.5 bg-white border border-stone-300 text-stone-600 hover:text-blue-600 hover:border-blue-300 rounded-lg text-xs font-medium transition shadow-sm flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-lines text-blue-500"></i> 匯出文件
+        <!-- Left Column (70%) -->
+        <div class="w-full lg:w-8/12 flex flex-col gap-6">
+            
+            <!-- Hero Section -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-100 to-cyan-100 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span id="hero-week-badge" class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold mb-3 border border-emerald-200">
+                                <i class="fa-regular fa-calendar-check mr-1"></i> 載入中...
+                            </span>
+                            <h2 class="text-2xl font-bold text-stone-900 mb-2">全球電力韌性與淨零焦點</h2>
+                        </div>
+                        <button onclick="exportToDoc()" class="flex items-center gap-2 px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50 hover:text-blue-600 transition-colors shadow-sm">
+                            <i class="fa-solid fa-file-word text-blue-600"></i> 匯出報告
                         </button>
                     </div>
-                    
-                    <div id="hero-summary-container" class="mb-6 relative z-10">
-                        <div class="skeleton h-4 w-full mb-2 rounded"></div>
-                        <div class="skeleton h-4 w-5/6 mb-2 rounded"></div>
-                        <div class="skeleton h-4 w-4/6 rounded"></div>
-                    </div>
-                    
-                    <div class="flex items-center gap-3 mt-4 pt-4 border-t border-stone-200">
-                        <div class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 border border-stone-300">
-                            <i class="fa-solid fa-user-astronaut"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-stone-700" id="hero-author">Casey Chen</p>
-                            <p class="text-xs text-stone-500" id="hero-bio">電力物聯網研究者</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Module A: Global Intelligence (Cards) -->
-                <section>
-                    <div class="flex items-center justify-between mb-4 mt-2">
-                        <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2">
-                            <i class="fa-solid fa-globe text-cyan-600"></i> 全球最新電力情報
-                        </h3>
-                        <span class="text-xs text-stone-500 bg-white px-2 py-1 rounded border border-stone-200 shadow-sm" id="active-filter-display">全部顯示</span>
-                    </div>
-                    
-                    <!-- Cards Container -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="global-cards-container">
-                        <!-- Skeletons -->
-                        <div class="glass-panel rounded-xl p-5 skeleton h-48"></div>
-                        <div class="glass-panel rounded-xl p-5 skeleton h-48"></div>
-                    </div>
-                    
-                    <!-- Empty State (Hidden by default) -->
-                    <div id="empty-state" class="hidden glass-panel rounded-xl p-10 text-center border-dashed border-2 border-stone-300 bg-stone-50">
-                        <div class="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center mb-4 text-stone-400 text-2xl border border-stone-200">
-                            <i class="fa-solid fa-satellite-dish"></i>
-                        </div>
-                        <h4 class="text-lg font-medium text-stone-700 mb-2">查無此情報？</h4>
-                        <p class="text-sm text-stone-500 mb-4">目前篩選條件下沒有符合的記錄，試試推薦的核心技術標籤：</p>
-                        <div class="flex justify-center gap-2">
-                            <button onclick="setFilter('虛擬電廠')" class="px-3 py-1 text-xs rounded-full bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 transition">#虛擬電廠</button>
-                            <button onclick="setFilter('電網韌性')" class="px-3 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition">#電網韌性</button>
-                            <button onclick="setFilter('AI用電')" class="px-3 py-1 text-xs rounded-full bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100 transition">#AI用電</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Module B: Taiwan Status & Strategy (Accordion) -->
-                <section class="mb-8 mt-4">
-                    <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2 mb-4">
-                        <i class="fa-solid fa-map-location-dot text-emerald-600"></i> 台灣現狀評估與策略
-                    </h3>
-                    <div class="glass-panel rounded-xl overflow-hidden shadow-sm" id="taiwan-analysis-container">
-                        <!-- Header Skeletons -->
-                        <div class="p-5 border-b border-stone-200">
-                            <div class="skeleton h-6 w-1/3 mb-3 rounded"></div>
-                            <div class="skeleton h-10 w-full rounded"></div>
-                        </div>
-                    </div>
-                </section>
+                    <p id="hero-summary" class="text-stone-600 leading-relaxed text-sm md:text-base border-l-4 border-emerald-500 pl-4">
+                        資料載入中，請稍候...
+                    </p>
+                </div>
             </div>
 
-            <!-- Right Column (30%) -->
-            <div class="w-full lg:w-4/12 flex flex-col gap-6">
-                
-                <!-- Module D: System Trigger (Gemini API Simulator) -->
-                <section class="glass-panel rounded-xl p-5 border border-emerald-200 relative overflow-hidden bg-white/90">
-                    <div class="absolute -right-4 -bottom-4 opacity-[0.03] text-9xl text-emerald-700 pointer-events-none">
-                        <i class="fa-brands fa-space-awesome"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-emerald-700 mb-2 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-microchip"></i> AI Agent Control
-                    </h3>
-                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">透過 <b>Gemini-3.5-flash</b> 模型即時爬梳全球網際網路，以極速生成最新一週的電力情報結構化數據。</p>
-                    <button id="trigger-gemini-btn" class="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white font-medium text-sm transition shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> 觸發 Gemini-3.5-flash 分析
-                    </button>
-                </section>
-
-                <!-- Module C: Historical Archives -->
-                <section class="glass-panel rounded-xl p-5 flex-grow flex flex-col h-[500px] bg-white/60">
-                    <h3 class="text-sm font-bold text-stone-700 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-clock-rotate-left text-stone-400"></i> 歷史情報歸檔
-                    </h3>
-                    
-                    <div class="relative mb-4">
-                        <input type="text" id="history-search" placeholder="搜尋歷史週報..." class="w-full bg-white border border-stone-300 rounded-lg pl-9 pr-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-emerald-500 transition shadow-sm">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-stone-400 text-sm"></i>
-                    </div>
-
-                    <div class="overflow-y-auto flex-grow pr-2" id="history-list-container">
-                        <!-- History items injected here -->
-                        <div class="flex flex-col gap-2">
-                            <div class="skeleton h-14 w-full rounded-lg border border-stone-200"></div>
-                            <div class="skeleton h-14 w-full rounded-lg border border-stone-200"></div>
-                            <div class="skeleton h-14 w-full rounded-lg border border-stone-200"></div>
-                        </div>
-                    </div>
-                </section>
+            <!-- Global Intel Grid -->
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-earth-americas text-cyan-600"></i>
+                    <h3 class="text-lg font-semibold text-stone-800">全球十大 ISO 最新情報</h3>
+                </div>
+                <div id="intel-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cards injected here -->
+                </div>
             </div>
+
+            <!-- Taiwan Analysis -->
+            <div class="mt-4">
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-location-dot text-emerald-600"></i>
+                    <h3 class="text-lg font-semibold text-stone-800">台灣現狀評估與戰略建議</h3>
+                </div>
+                <div class="glass-panel rounded-2xl p-6 flex flex-col gap-5 border-t-4 border-t-emerald-500" id="taiwan-analysis-container">
+                    <!-- Taiwan intel injected here -->
+                </div>
+            </div>
+
         </div>
 
-        <!-- Admin View (Hidden by default) -->
-        <div id="admin-view" class="hidden w-full flex-col gap-6 fade-enter">
-            <div class="flex items-center justify-between mb-2">
-                <h2 class="text-2xl font-bold text-stone-800 flex items-center gap-3">
-                    <i class="fa-solid fa-users-gear text-cyan-600"></i> 後台管理中心
-                </h2>
-                <span class="px-3 py-1 bg-white text-stone-600 text-xs rounded-full border border-stone-300 shadow-sm">系統會員總覽</span>
+        <!-- Right Column (30%) -->
+        <div class="w-full lg:w-4/12 flex flex-col gap-6">
+            
+            <!-- Agent Trigger Panel -->
+            <div class="glass-panel rounded-2xl p-5 flex flex-col gap-4">
+                <div class="flex items-center gap-2 pb-3 border-b border-stone-200">
+                    <div class="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-cyan-700">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h3 class="font-semibold text-stone-800">AI 代理分析引擎</h3>
+                </div>
+                <p class="text-xs text-stone-500 leading-relaxed">
+                    以 Gemini-3.5-flash 模型驅動，秒級爬梳全球十大 ISO 監管文件、負載數據與容量市場價格，產出對標台灣之策略建議。
+                </p>
+                <button id="trigger-gemini-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 text-white font-medium shadow-md hover:shadow-lg hover:from-emerald-700 hover:to-cyan-700 transition-all active:scale-95 flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>觸發 Flash 極速分析</span>
+                </button>
+                <div class="text-[10px] text-center text-stone-400 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> 分析結果將自動同步至 Firestore
+                </div>
             </div>
 
-            <section class="glass-panel rounded-2xl p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold text-stone-700">註冊會員清單</h3>
-                    <button onclick="window.fetchUsers()" class="text-xs px-3 py-1.5 bg-white hover:bg-stone-50 text-stone-700 rounded border border-stone-300 transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-rotate-right"></i> 重新整理
-                    </button>
+            <!-- History Archives -->
+            <div class="glass-panel rounded-2xl p-5 flex-grow flex flex-col">
+                <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-4">
+                    <h3 class="font-semibold text-stone-800 flex items-center gap-2">
+                        <i class="fa-solid fa-box-archive text-stone-400"></i> 歷史情報庫
+                    </h3>
+                    <span class="text-xs text-stone-500" id="history-count">0 筆</span>
                 </div>
-                
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-stone-700 whitespace-nowrap">
-                        <thead class="text-xs text-stone-500 uppercase bg-stone-100 border-y border-stone-200">
-                            <tr>
-                                <th class="px-4 py-3 font-semibold">使用者名稱</th>
-                                <th class="px-4 py-3 font-semibold">Email</th>
-                                <th class="px-4 py-3 font-semibold">權限角色</th>
-                                <th class="px-4 py-3 font-semibold">註冊時間</th>
-                                <th class="px-4 py-3 font-semibold text-right">狀態</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-users-list" class="divide-y divide-stone-200">
-                            <!-- User rows injected here -->
-                            <tr>
-                                <td colspan="5" class="px-4 py-8 text-center text-stone-500">
-                                    <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> 載入會員資料中...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div id="history-list" class="flex flex-col gap-2 overflow-y-auto max-h-[500px] pr-2">
+                    <!-- History items injected here -->
                 </div>
-            </section>
+            </div>
+
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-stone-200 bg-stone-100 mt-auto py-6">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <p class="text-sm text-stone-500 font-medium">
-                電力最新情報 | 創作者: Casey Chen (電力物聯網研究者) <br>
-                <span class="text-xs mt-1 inline-block font-normal">Copyright ©2026 Casey Chen All rights reserved.</span>
-            </p>
+    <!-- User Guide Modal -->
+    <div id="user-guide-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity" onclick="toggleUserGuide()"></div>
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-2xl w-full border border-stone-200 scale-95 opacity-0 duration-300" id="user-guide-content">
+                <div class="px-6 py-5 border-b border-stone-100 flex justify-between items-center bg-stone-50/50">
+                    <h3 class="text-lg leading-6 font-semibold text-stone-800 flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-emerald-600"></i> 平台使用說明
+                    </h3>
+                    <button onclick="toggleUserGuide()" class="text-stone-400 hover:text-stone-600 transition-colors">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                <div class="px-6 py-6">
+                    <p class="text-sm text-stone-600 mb-6">歡迎使用「台灣電力最新情報分析平台」。本系統透過 Vibe Coding 打造，結合 Serverless 架構與 AI 模型，為您提供高效的決策情報。</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-100">
+                            <h4 class="font-semibold text-stone-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-bolt text-cyan-600"></i> 極速 AI 分析</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">點擊右側的「觸發 Flash 極速分析」按鈕，系統將模擬呼叫 Gemini-3.5-flash 模型，為您抓取並生成最新一週的全球十大 ISO 深度情報。</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-100">
+                            <h4 class="font-semibold text-stone-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-tags text-emerald-600"></i> 智能標籤篩選</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">點擊網頁頂部的關鍵字（如：虛擬電廠、AI DC），系統會即時過濾目前的卡片內容。再次點擊即可取消篩選。</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-100">
+                            <h4 class="font-semibold text-stone-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-file-word text-blue-500"></i> 匯出 Google 文件</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">在標題列點擊「匯出報告」，系統會將當前畫面內容打包為 .doc 格式。下載後可直接拖曳至 Google Drive 開啟編輯。</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-100">
+                            <h4 class="font-semibold text-stone-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-cloud text-stone-500"></i> 雲端自動存檔</h4>
+                            <p class="text-xs text-stone-600 leading-relaxed">所有生成的報告均會自動同步至您的 Firebase Firestore 資料庫，您可從右側「歷史情報庫」隨時調閱先前的分析紀錄。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-stone-50 px-6 py-4 flex justify-end">
+                    <button onclick="toggleUserGuide()" class="bg-stone-800 hover:bg-stone-700 text-white font-medium py-2 px-5 rounded-lg text-sm transition-colors">
+                        我了解了
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <footer class="mt-auto border-t border-stone-200 bg-white/50 backdrop-blur-sm py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-xs text-stone-500">電力最新情報 | 創作者: Casey Chen (電力物聯網研究者)</p>
+            <p class="text-[10px] text-stone-400 mt-1">Copyright &copy; 2026 Casey Chen. All rights reserved. Powered by Vibe Coding.</p>
         </div>
     </footer>
-
-    <!-- User Guide Modal (新增使用說明彈出視窗) -->
-    <div id="guide-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-stone-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div class="glass-panel p-6 md:p-8 rounded-2xl w-full max-w-2xl relative z-10 max-h-[85vh] flex flex-col transform scale-95 transition-transform duration-300 bg-white/95">
-            <!-- Close Button -->
-            <button id="close-guide-btn" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-700 transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 text-xl shadow-sm">
-                    <i class="fa-solid fa-book-open"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold text-stone-800">平台使用說明書</h2>
-                    <p class="text-xs text-stone-500 font-medium">Platform Guide & Manual</p>
-                </div>
-            </div>
-
-            <!-- Content -->
-            <div class="overflow-y-auto pr-4 flex-grow space-y-6 text-sm text-stone-700 font-medium">
-                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 1. AI 代理分析生成</h3>
-                    <p class="leading-relaxed">點擊右側面板的 <b>「觸發 Gemini-3.5-flash 分析」</b> 按鈕，系統將啟動 AI 代理程式，自動為您抓取並分析全球與台灣本週最新的電力情報，並將結果結構化儲存至 Firebase 雲端資料庫。</p>
-                </div>
-
-                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-filter"></i> 2. 關鍵字智能篩選</h3>
-                    <p class="leading-relaxed">網頁最上方的 <b>五大關鍵字標籤</b>（如：虛擬電廠、電網韌性等），點擊後可即時過濾左側「全球最新電力情報」看板，快速聚焦您關注的技術領域。再次點擊即可取消篩選。</p>
-                </div>
-
-                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-file-export"></i> 3. 匯出分析文件</h3>
-                    <p class="leading-relaxed">在左側主欄位的標題旁點擊 <b>「匯出文件」</b>，系統會自動將當前畫面的情報與對策，轉化為相容微軟 Word 與 Google Docs 的 <code>.doc</code> 格式，方便您直接附加於決策簡報中。</p>
-                </div>
-                
-                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
-                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left"></i> 4. 歷史情報檢索</h3>
-                    <p class="leading-relaxed">在右下方的 <b>「歷史情報歸檔」</b> 區塊，您可以透過搜尋框輸入週數 (如: 2026-W08) 或情報摘要內的關鍵字，點擊列表即可調閱過去的完整報告。</p>
-                </div>
-            </div>
-            
-            <div class="mt-6 pt-4 border-t border-stone-200 flex justify-end">
-                <button id="guide-understood-btn" class="px-6 py-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white rounded-lg text-sm font-medium transition shadow-md flex items-center gap-2">
-                    <i class="fa-solid fa-check"></i> 我了解了
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
-        <div class="bg-white/95 backdrop-blur-sm border border-stone-200 text-stone-800 px-4 py-3 rounded-lg shadow-xl flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
-            <span id="toast-message" class="text-sm font-medium">操作成功</span>
-        </div>
-    </div>
 
     <!-- Application Logic -->
     <script type="module">
         // Import Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDocs, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Constants & State
-        const KEYWORDS = ["虛擬電廠", "AI DC", "AI用電", "電網韌性", "電網慣性"];
+        const KEYWORDS = ["虛擬電廠", "AI DC", "AI用電", "電網韌性", "電網慣量"];
         const KEYWORD_STYLES = {
-            "虛擬電廠": "text-purple-700 bg-purple-100 border-purple-200",
-            "AI DC": "text-blue-700 bg-blue-100 border-blue-200",
-            "AI用電": "text-orange-700 bg-orange-100 border-orange-200",
-            "電網韌性": "text-emerald-700 bg-emerald-100 border-emerald-200",
-            "電網慣性": "text-cyan-700 bg-cyan-100 border-cyan-200"
+            "虛擬電廠": "text-emerald-700 bg-emerald-100/50 border-emerald-200",
+            "AI DC": "text-blue-700 bg-blue-100/50 border-blue-200",
+            "AI用電": "text-cyan-700 bg-cyan-100/50 border-cyan-200",
+            "電網韌性": "text-orange-700 bg-orange-100/50 border-orange-200",
+            "電網慣量": "text-indigo-700 bg-indigo-100/50 border-indigo-200"
         };
         
         let state = {
             reports: [],
             currentReport: null,
             activeFilter: null,
-            isLoading: true,
-            userId: null,
-            isAnonymous: true,
-            isAdminView: false
+            isLoading: true
         };
 
         // Firebase Configuration
@@ -533,48 +280,44 @@
             console.error("Error initializing Firebase:", e);
         }
 
-        // Initialize App
         async function initApp() {
             renderFilterTags();
             const statusBadge = document.getElementById('db-status-badge');
             
             if (auth && db) {
-                // Listen for auth state changes
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
-                        state.userId = user.uid;
-                        state.isAnonymous = user.isAnonymous;
-                        hideLoginOverlay();
-                        updateHeaderActions();
-                        
-                        statusBadge.innerHTML = '<i class="fa-solid fa-cloud text-emerald-600"></i> Firebase 已連線';
+                        statusBadge.innerHTML = '<i class="fa-solid fa-cloud text-emerald-500"></i> Firebase 已連線';
                         statusBadge.className = 'px-2 py-0.5 rounded text-[10px] border border-emerald-200 text-emerald-700 bg-emerald-50 flex items-center gap-1 transition-all duration-300 shadow-sm font-medium';
-                        
                         await fetchReports();
                     } else {
-                        state.userId = null;
-                        state.isAnonymous = true;
-                        updateHeaderActions();
-                        if(state.isAdminView) window.toggleAdminView();
-                        showLoginOverlay();
+                        try {
+                            await signInAnonymously(auth);
+                        } catch (error) {
+                            console.error("Anonymous Auth Error:", error);
+                            fallbackToMock(statusBadge);
+                        }
                     }
                 });
             } else {
-                loadMockData();
-                hideLoginOverlay();
+                fallbackToMock(statusBadge);
             }
             bindEvents();
-            bindLoginEvents();
+        }
+
+        function fallbackToMock(badgeElement) {
+            badgeElement.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> 離線備份資料';
+            badgeElement.className = 'px-2 py-0.5 rounded text-[10px] border border-amber-300 text-amber-700 bg-amber-50 flex items-center gap-1 transition-all duration-300 shadow-sm font-medium';
+            loadMockData();
         }
 
         // Database Operations
-        function getCollectionPath() { return `electricity_reports`; }
-        function getUsersCollectionPath() { return `users`; }
+        const COLLECTION_PATH = `electricity_reports`;
 
         async function fetchReports() {
             state.isLoading = true;
             try {
-                const q = query(collection(db, getCollectionPath()));
+                const q = query(collection(db, COLLECTION_PATH));
                 const querySnapshot = await getDocs(q);
                 
                 let fetchedReports = [];
@@ -583,7 +326,6 @@
                 });
 
                 if (fetchedReports.length === 0) {
-                    console.log("No data found, seeding initial PRD data...");
                     await seedInitialData();
                 } else {
                     state.reports = fetchedReports.sort((a, b) => b.reportId.localeCompare(a.reportId));
@@ -592,72 +334,111 @@
                 }
             } catch (error) {
                 console.error("Error fetching reports:", error);
-                
                 const statusBadge = document.getElementById('db-status-badge');
-                statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-600"></i> 本機備份資料';
-                statusBadge.className = 'px-2 py-0.5 rounded text-[10px] border border-amber-300 text-amber-700 bg-amber-50 flex items-center gap-1 transition-all duration-300 shadow-sm font-medium';
-                
-                showToast("權限受阻或網路錯誤，目前載入離線備份資料。", "error");
-                loadMockData();
+                fallbackToMock(statusBadge);
+                if (error.code === 'permission-denied') {
+                    showToast("Firebase 權限遭拒，請至後台修改 Rules。目前載入備份資料。", "error");
+                }
             } finally {
                 state.isLoading = false;
             }
         }
 
+        // [專家級深度強化] 十大 ISO/TSO 基準分析數據
         const initialMockData = {
-            reportId: "2026-W08",
-            createdTime: "2026-02-22T08:00:00Z",
+            reportId: "2026-W32",
+            createdTime: "2026-08-09T08:00:00Z",
             author: "Casey Chen (Global Power Expert)",
             authorBio: "全球電網韌性與淨零工程首席分析師",
-            summary: "本週深度追蹤全球十大 ISO/TSO 動態：歐美電網營運商正全面轉向「系統服務(System Services)」與「節點邊際電價(LMP)」改革。CAISO(加州)與 PJM(美東)面臨 AI 資料中心爆炸性負載，正加速推進動態線路額定(DLR)與 VPP 批發市場整合(FERC 2222)。對標台灣，北部電網的「空間錯位」急需引入區域價格訊號與高階併網規範。",
+            summary: "2026年Q3全球電力核心矛盾已從「綠電滲透率」轉向「電網物理極限」與「AI算力巨獸」的正面衝突。綜觀全球十大 ISO，PJM 與 CAISO 正透過節點電價(LMP)與動態線路額定(DLR)續命；歐洲與英國則完全剝離實功市場，轉向採購純粹的『系統慣量』。面對台電南電北送的 345kV 壅塞，傳統 N-1 擴建已不敷 AI DC 所需，必須立即對標國際，啟動 Connect & Manage 與微電網直供法規。",
             globalIntelligence: [
                 {
-                    region: "英國 (National Grid ESO)", flag: "🇬🇧",
-                    title: "發布 Pathfinder 計畫：向市場採購「純慣性」",
-                    content: "為達成 2025 年無碳運轉，英國 ESO 首創全球「穩定性(Stability)市場」。不再綁定實功發電，而是向飛輪、同步調相機與構網型(GFM)儲能採購短路容量(Short Circuit Level)與電網慣性，已成功節省數億英鎊的基礎建設升級費。",
-                    metrics: { resilienceScore: 95, vppAdoptionRate: "68%" },
-                    tags: ["電網韌性", "電網慣性"]
+                    region: "美國東岸 (PJM)", flag: "🇺🇸",
+                    title: "AI 負載壅塞，容量市場啟動「可靠性必須運轉(RMR)」",
+                    content: "PJM 面臨維吉尼亞州 Data Center Alley 高達 40GW 的併網申請。因高壓輸電擴建不及，PJM 破例延長燃煤機組退役時間(RMR)，並首創「AI 快速審查路徑」：若 AI DC 承諾配備 20% 容量的 GFM 儲能並能接受 5 秒內負載卸載(Load Shedding)，可插隊併網。",
+                    metrics: { resilienceScore: 82, vppAdoptionRate: "45%" },
+                    tags: ["AI DC", "電網韌性"]
                 },
                 {
-                    region: "美國加州 (CAISO)", flag: "🇺🇸",
-                    title: "AI 驅動的 DLR (動態線路額定) 大規模實證",
-                    content: "面對嚴重輸電壅塞，CAISO 放棄耗時的實體擴建，轉而導入 AI 感測器即時運算氣象與線路垂度。透過 DLR 技術，現有 345kV 線路傳輸容量在特定天候下提升了 20-30%，大幅緩解太陽能「鴨子曲線」的棄載危機。",
-                    metrics: { resilienceScore: 88, vppAdoptionRate: "52%" },
+                    region: "加州 (CAISO)", flag: "🇺🇸",
+                    title: "鴨子曲線惡化，強制導入動態線路額定 (DLR)",
+                    content: "CAISO 太陽能滲透率極高，傍晚需面對 20GW 的極端爬坡。為解決輸電壅塞，加州全面強制 230kV 以上線路安裝 AI 氣象感測器實施 DLR，打破靜態熱額定限制，在特定風速下釋放了高達 30% 的既有傳輸餘裕。",
+                    metrics: { resilienceScore: 88, vppAdoptionRate: "62%" },
                     tags: ["電網韌性", "AI用電"]
                 },
                 {
-                    region: "澳洲 (AEMO)", flag: "🇦🇺",
-                    title: "Project Symphony：民生 VPP 正式納入調度",
-                    content: "西澳電網面臨「最低系統負載(Minimum System Load)」危機(白天光電過剩導致發電機被迫解聯)。AEMO 成功將超過萬戶的屋頂光電、家用儲能與熱水器聚合成 VPP，做為可視化的「負載增長/減少」資源參與即時市場調度。",
-                    metrics: { resilienceScore: 92, vppAdoptionRate: "75%" },
+                    region: "德州 (ERCOT)", flag: "🇺🇸",
+                    title: "極端氣候防線，特斯拉 ADER 計畫成備轉主力",
+                    content: "德州電網獨立且缺乏跨州互聯，面對熱浪，ERCOT 大幅放寬「聚合分散式能源(ADER)」參與輔助服務。特斯拉 VPP 整合逾 5 萬組 Powerwall，在頻率跌落時提供數百 MW 的秒級快反(Fast Frequency Response)，成為防範 Blackout 的核心。",
+                    metrics: { resilienceScore: 85, vppAdoptionRate: "75%" },
                     tags: ["虛擬電廠", "電網韌性"]
                 },
                 {
+                    region: "英國 (ESO)", flag: "🇬🇧",
+                    title: "無碳運轉里程碑：Pathfinder 計畫買斷「慣量」",
+                    content: "為達成 100% 零碳運轉，ESO 徹底將「電能市場」與「穩定度市場」脫鉤。透過 Pathfinder 計畫，向市場購買純粹的短路容量(Short Circuit Level)與電網慣量，大量部署同步調相機與構網型(Grid-forming)逆變器，節省數億英鎊擴建費。",
+                    metrics: { resilienceScore: 95, vppAdoptionRate: "68%" },
+                    tags: ["電網韌性", "電網慣量"]
+                },
+                {
+                    region: "澳洲 (AEMO)", flag: "🇦🇺",
+                    title: "對抗最低系統負載，Project Symphony 納入調度",
+                    content: "西澳面臨白日屋頂光電氾濫導致的「最低系統負載(Minimum System Load)」危機，機組被迫解聯。AEMO 透過 DERMS 將數萬戶家庭儲能與熱水器聚合成 VPP，做為可控的「下行負載(Load Increase)」參與即時批發市場。",
+                    metrics: { resilienceScore: 92, vppAdoptionRate: "78%" },
+                    tags: ["虛擬電廠", "AI用電"]
+                },
+                {
+                    region: "歐洲 (ENTSO-E)", flag: "🇪🇺",
+                    title: "FCR 市場跨國境整合，V2G 電動車隊參戰",
+                    content: "歐洲聯網進一步打通跨國頻率控制儲備(FCR)市場。最新法規允許跨國聚合電動車(EV)，當歐陸頻率偏離 50Hz，百萬台 EV 能以「分散式合成慣量」瞬間停止充電或反向放電，大幅降低對天然氣快啟機組的依賴。",
+                    metrics: { resilienceScore: 93, vppAdoptionRate: "55%" },
+                    tags: ["電網慣量", "虛擬電廠"]
+                },
+                {
                     region: "日本 (OCCTO)", flag: "🇯🇵",
-                    title: "實施 Connect & Manage (N-1 電網管理放寬)",
-                    content: "日本電力廣域營運推進機關(OCCTO)突破傳統「N-1 安全準則」的絕對限制。允許再生能源在平時全額輸出，僅在電網發生單一設備故障(N-1)的瞬間，透過控制系統(RAS)瞬間切離部分綠電，釋放了極大的潛在併網容量。",
-                    metrics: { resilienceScore: 85, vppAdoptionRate: "42%" },
+                    title: "全面實施 Connect & Manage (N-1 準則放寬)",
+                    content: "日本突破傳統絕對保守的「N-1 安全準則」。透過『非堅實型併網』協議，允許再生能源在平時全額輸出，僅在電網發生單一設備故障(N-1)瞬間，透過廣域控制系統(RAS)瞬間切離部分發電，釋放全日本近 40GW 的潛在併網容量。",
+                    metrics: { resilienceScore: 89, vppAdoptionRate: "42%" },
                     tags: ["電網韌性"]
+                },
+                {
+                    region: "韓國 (KPX)", flag: "🇰🇷",
+                    title: "濟州島棄電解方，導入區域節點電價 (LMP)",
+                    content: "針對濟州島嚴重的風電棄載(Curtailment)，KPX 正式從全國單一電價過渡到「節點邊際電價(LMP)」雛形。利用價格訊號引導耗能產業與大型 ESS 移入高發電、輸電瓶頸區，以經濟手段解決物理壅塞。",
+                    metrics: { resilienceScore: 86, vppAdoptionRate: "35%" },
+                    tags: ["電網韌性", "AI DC"]
+                },
+                {
+                    region: "加拿大 (IESO)", flag: "🇨🇦",
+                    title: "AI 算力與 SMR (小型模組化核能) 共站直供",
+                    content: "安大略省 IESO 面對 AI 投資熱潮，前瞻性開放「共站配置(Co-location)」。允許科技巨頭直接投資 SMR 核電廠，並透過私有微電網供電給 AI DC，完全不占用公用輸電網容量，實現真正的 24/7 CFE。",
+                    metrics: { resilienceScore: 91, vppAdoptionRate: "30%" },
+                    tags: ["AI DC", "電網韌性"]
+                },
+                {
+                    region: "中國 (SGCC)", flag: "🇨🇳",
+                    title: "特高壓 (UHV) 與源網荷儲一體化 AI 調度",
+                    content: "國家電網面對西部綠電與東部負載的空間錯位，除擴建 800kV 特高壓直流輸電外，全面引入 AI 預測進行「源網荷儲」微秒級調度。並強制新建風光案場必須配備 15%-20% 的強制儲能。",
+                    metrics: { resilienceScore: 84, vppAdoptionRate: "50%" },
+                    tags: ["AI用電", "電網韌性"]
                 }
             ],
             taiwanAnalysis: {
-                currentStatus: "台灣目前陷入嚴峻的「南電北送」物理傳輸瓶頸。北部科技廊帶的 AI 資料中心(AI DC)與半導體擴建量，已遠超超高壓幹線(345kV)的輸送餘裕。台電(TPC)為維持 N-1 安全準則，被迫暫停部分北部 AI DC 供電申請，區域供需嚴重失衡。",
-                gapAnalysis: "相比 PJM 或 CAISO 採用「節點邊際電價 (Locational Marginal Pricing, LMP)」以價格引導資源建置，台灣單一電價無法反映區域壅塞。此外，針對大型 AI 用戶，缺乏要求其配備「構網型儲能(GFM)」或「動態需量反應」的強制力，系統韌性高度依賴單向擴建。",
+                currentStatus: "台灣當前陷入嚴峻的「南電北送」物理傳輸瓶頸。北部科技廊帶的 AI 資料中心擴建量，已遠超 345kV 超高壓幹線的輸送餘裕。台電(TPC)為死守傳統「N-1 安全準則」，被迫暫停桃園以北 5MW 以上 AI DC 的供電申請，區域供需陷入嚴重矛盾。",
+                gapAnalysis: "對標全球十大 ISO，台灣致命傷在於『缺乏價格空間訊號』與『法規過度僵化』。KPX 與 PJM 均透過節點電價(LMP)引導資源建置；CAISO 利用 DLR 榨出硬體極限；日本 OCCTO 已放寬 N-1 限制；而台灣卻仍依賴全國單一電價，且缺乏要求 AI 大戶配備 GFM (構網型儲能) 或承擔卸載義務的法源。",
                 strategicRecommendations: {
-                    shortTerm: "【實施區域彈性費率與 GFM 規範】針對北部壅塞區，試辦「區域容量加給」或引進 LMP 雛型，提供誘因讓分散式電源(DER)建置於北部。立即修訂併網法規，要求新建之大型儲能系統(E-dReg)必須具備構網型(Grid-forming)逆變器能力。",
-                    mediumTerm: "【推動 AI DC 動態負載與 Co-location】參考美歐趨勢，開放 AI 資料中心與大型綠能電廠、甚至新型核能(SMR)「共站(Co-location)直供」，繞開台電輸電網。並要求 AI DC 與台電調度中心連線，提供 20% 負載的秒級快降能力(Load Shedding)。",
-                    longTerm: "【布建 DLR 與全民 VPP 批發市場】全面在 345kV 幹線導入「動態線路額定(DLR)」，利用 AI 最大化既有電網價值。跟進美國 FERC 2222 命令，修法打破聚合商(Aggregators)門檻，讓電動車(V2G)與智慧家電聚合成巨型 VPP，直接競價參與輔助服務市場。"
+                    shortTerm: "【解除 N-1 緊箍咒與導入 DLR】立即對標日本 OCCTO 的 Connect & Manage 機制，與北部 AI DC 簽訂「非堅實供電合約」，允許其在 N-1 事故瞬間接受系統 RAS 切載，換取立即併網。全面在 345kV 中北幹線佈建動態線路額定(DLR)感測器，無痛提升 15% 傳輸容量。",
+                    mediumTerm: "【建立 LMP 節點電價與純慣量市場】破除全國均價迷思，借鏡韓國與美國，針對北部壅塞區實施 LMP 雛型，利用高電價逼迫負載南移或吸引儲能北建。仿效英國 ESO Pathfinder，獨立開出「系統慣量/短路容量」採購案，高價吸引儲能升級為 GFM 逆變器。",
+                    longTerm: "【推動 SMR共站直供 與 VPP 市場】針對未來 Super AI DC，對標加拿大 IESO，特許跨國科技巨頭投資小型模組化核能(SMR)或地熱，並以「共站(Co-location)」微電網直供，繞開公用電網。同時修法打破聚合商門檻，讓全台百萬輛電動車(V2G)聚合成 VPP 競價。"
                 }
             },
-            keywordsMetadata: {
-                "虛擬電廠": true, "AI DC": true, "電網韌性": true, "電網慣性": true, "AI用電": true
-            }
+            keywordsMetadata: { "虛擬電廠": true, "AI DC": true, "電網韌性": true, "電網慣量": true, "AI用電": true }
         };
 
         async function seedInitialData() {
             if(!db) return loadMockData();
             try {
-                const docRef = doc(db, getCollectionPath(), initialMockData.reportId);
+                const docRef = doc(db, COLLECTION_PATH, initialMockData.reportId);
                 await setDoc(docRef, initialMockData);
                 state.reports = [initialMockData];
                 state.currentReport = initialMockData;
@@ -675,542 +456,7 @@
             renderUI();
         }
 
-        function updateHeaderActions() {
-            const actionsContainer = document.getElementById('user-actions');
-            if (state.userId && !state.isAnonymous) {
-                actionsContainer.classList.remove('hidden');
-            } else {
-                actionsContainer.classList.add('hidden');
-            }
-        }
-
-        function renderFilterTags() {
-            const container = document.getElementById('keyword-filters');
-            container.innerHTML = KEYWORDS.map(kw => {
-                const isActive = state.activeFilter === kw;
-                const baseClass = "px-3 py-1.5 rounded-full text-xs font-medium border cursor-pointer transition-all duration-200 shadow-sm";
-                const activeClass = isActive 
-                    ? KEYWORD_STYLES[kw] 
-                    : "text-stone-500 border-stone-300 hover:border-stone-400 hover:bg-stone-100 bg-white";
-                return `<button onclick="window.setFilter('${kw}')" class="${baseClass} ${activeClass}">${kw}</button>`;
-            }).join('');
-            
-            document.getElementById('active-filter-display').textContent = state.activeFilter ? `篩選: ${state.activeFilter}` : "顯示全部";
-        }
-
-        window.setFilter = (kw) => {
-            state.activeFilter = state.activeFilter === kw ? null : kw;
-            renderFilterTags();
-            renderGlobalCards();
-        };
-
-        function renderUI() {
-            if (!state.currentReport) return;
-            
-            document.getElementById('hero-report-id').textContent = state.currentReport.reportId;
-            document.getElementById('hero-author').textContent = state.currentReport.author;
-            document.getElementById('hero-bio').textContent = state.currentReport.authorBio;
-            document.getElementById('hero-summary-container').innerHTML = `<p class="text-stone-600 font-medium leading-relaxed text-sm md:text-base">${state.currentReport.summary}</p>`;
-            
-            renderGlobalCards();
-            renderTaiwanAnalysis();
-            renderHistoryList();
-        }
-
-        function getTagStyle(tag) {
-            return KEYWORD_STYLES[tag] || "text-stone-500 bg-stone-100 border-stone-200";
-        }
-
-        function renderGlobalCards() {
-            const container = document.getElementById('global-cards-container');
-            const emptyState = document.getElementById('empty-state');
-            
-            if (!state.currentReport.globalIntelligence) return;
-
-            let filteredCards = state.currentReport.globalIntelligence;
-            if (state.activeFilter) {
-                filteredCards = filteredCards.filter(card => card.tags.includes(state.activeFilter));
-            }
-
-            if (filteredCards.length === 0) {
-                container.innerHTML = '';
-                container.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-            } else {
-                container.classList.remove('hidden');
-                emptyState.classList.add('hidden');
-                
-                container.innerHTML = filteredCards.map((card, index) => `
-                    <div class="glass-panel rounded-xl p-5 hover:border-emerald-300 transition-colors fade-enter fade-enter-active bg-white" style="animation-delay: ${index * 0.1}s">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-2xl">${card.flag}</span>
-                                <span class="font-bold text-stone-700 text-sm">${card.region}</span>
-                            </div>
-                        </div>
-                        <h4 class="text-base font-bold text-stone-900 mb-2 leading-tight">${card.title}</h4>
-                        <p class="text-sm text-stone-600 mb-4 h-[4.5rem] overflow-hidden">${card.content}</p>
-                        
-                        <!-- Metrics -->
-                        <div class="grid grid-cols-2 gap-3 mb-4 p-3 bg-stone-50 rounded-lg border border-stone-200 shadow-inner">
-                            <div>
-                                <p class="text-[10px] font-semibold text-stone-500 uppercase">韌性分數</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-lg font-bold ${card.metrics.resilienceScore >= 85 ? 'text-emerald-600' : 'text-amber-500'}">${card.metrics.resilienceScore}</span>
-                                    <div class="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
-                                        <div class="${card.metrics.resilienceScore >= 85 ? 'bg-emerald-500' : 'bg-amber-400'} h-full" style="width: ${card.metrics.resilienceScore}%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="pl-2 border-l border-stone-200">
-                                <p class="text-[10px] font-semibold text-stone-500 uppercase">VPP 滲透率</p>
-                                <p class="text-lg font-bold text-cyan-600 mt-0.5">${card.metrics.vppAdoptionRate}</p>
-                            </div>
-                        </div>
-
-                        <!-- Tags -->
-                        <div class="flex flex-wrap gap-1.5">
-                            ${card.tags.map(tag => `<span class="px-2 py-0.5 rounded text-[10px] font-medium border ${getTagStyle(tag)}">${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function renderTaiwanAnalysis() {
-            const container = document.getElementById('taiwan-analysis-container');
-            const data = state.currentReport.taiwanAnalysis;
-            
-            container.innerHTML = `
-                <div class="p-5 border-b border-stone-200 bg-white">
-                    <h4 class="text-sm font-bold text-stone-500 mb-2 uppercase tracking-wide">Current Status & Gap</h4>
-                    <p class="text-stone-800 text-sm mb-4 font-medium leading-relaxed">${data.currentStatus}</p>
-                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-3 shadow-sm">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
-                        <p class="text-xs text-amber-800 font-medium leading-relaxed">${data.gapAnalysis}</p>
-                    </div>
-                </div>
-                
-                <!-- Accordion for Strategies -->
-                <div class="bg-white">
-                    <button onclick="window.toggleAccordion()" class="w-full p-4 flex justify-between items-center text-left hover:bg-stone-50 transition text-emerald-700 font-bold text-sm">
-                        <span><i class="fa-solid fa-chess-knight mr-2"></i> 策略建議書 (Strategic Recommendations)</span>
-                        <i class="fa-solid fa-chevron-down transition-transform duration-300" id="accordion-icon"></i>
-                    </button>
-                    <div id="strategy-content" class="accordion-content bg-stone-50/50">
-                        <div class="p-5 flex flex-col gap-5 border-t border-stone-200">
-                            <div class="flex gap-4 items-start">
-                                <div class="w-12 h-6 rounded bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center justify-center shrink-0 shadow-sm">短期</div>
-                                <p class="text-sm text-stone-700 leading-relaxed font-medium">${data.strategicRecommendations.shortTerm}</p>
-                            </div>
-                            <div class="flex gap-4 items-start">
-                                <div class="w-12 h-6 rounded bg-cyan-100 border border-cyan-200 text-cyan-700 text-xs font-bold flex items-center justify-center shrink-0 shadow-sm">中期</div>
-                                <p class="text-sm text-stone-700 leading-relaxed font-medium">${data.strategicRecommendations.mediumTerm}</p>
-                            </div>
-                            <div class="flex gap-4 items-start">
-                                <div class="w-12 h-6 rounded bg-purple-100 border border-purple-200 text-purple-700 text-xs font-bold flex items-center justify-center shrink-0 shadow-sm">長期</div>
-                                <p class="text-sm text-stone-700 leading-relaxed font-medium">${data.strategicRecommendations.longTerm}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        window.toggleAccordion = () => {
-            const content = document.getElementById('strategy-content');
-            const icon = document.getElementById('accordion-icon');
-            content.classList.toggle('open');
-            icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-        };
-
-        function renderHistoryList() {
-            const container = document.getElementById('history-list-container');
-            const searchTerm = document.getElementById('history-search').value.toLowerCase();
-            
-            const filteredReports = state.reports.filter(r => 
-                r.reportId.toLowerCase().includes(searchTerm) || 
-                r.summary.toLowerCase().includes(searchTerm)
-            );
-
-            container.innerHTML = filteredReports.map(r => {
-                const isCurrent = state.currentReport && state.currentReport.reportId === r.reportId;
-                return `
-                    <button onclick="window.loadReport('${r.reportId}')" class="w-full text-left p-3 rounded-lg mb-2 transition-all border shadow-sm ${isCurrent ? 'bg-white border-emerald-300 shadow-md transform -translate-y-0.5' : 'bg-white/50 border-stone-200 hover:bg-white hover:border-stone-300'}">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-sm font-bold ${isCurrent ? 'text-emerald-600' : 'text-stone-700'}">${r.reportId}</span>
-                            <span class="text-[10px] font-medium text-stone-400">${new Date(r.createdTime).toLocaleDateString()}</span>
-                        </div>
-                        <p class="text-xs text-stone-500 truncate font-medium">${r.summary}</p>
-                    </button>
-                `;
-            }).join('');
-        }
-
-        window.loadReport = (id) => {
-            const report = state.reports.find(r => r.reportId === id);
-            if (report) {
-                state.currentReport = report;
-                state.activeFilter = null;
-                renderFilterTags();
-                renderUI();
-                showToast(`已載入 ${id} 報告`);
-            }
-        };
-
-        // 新增：開啟與關閉說明視窗邏輯
-        function openGuideModal() {
-            const modal = document.getElementById('guide-modal');
-            const content = modal.querySelector('div.glass-panel');
-            modal.classList.remove('hidden');
-            void modal.offsetWidth; // 強制重繪以觸發動畫
-            modal.classList.remove('opacity-0');
-            content.classList.remove('scale-95');
-        }
-
-        function closeGuideModal() {
-            const modal = document.getElementById('guide-modal');
-            const content = modal.querySelector('div.glass-panel');
-            modal.classList.add('opacity-0');
-            content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
-
-        function bindEvents() {
-            document.getElementById('history-search').addEventListener('input', renderHistoryList);
-            document.getElementById('trigger-gemini-btn').addEventListener('click', simulateGeminiAnalysis);
-            document.getElementById('download-doc-btn').addEventListener('click', exportToDoc);
-            document.getElementById('logout-btn').addEventListener('click', async () => {
-                try {
-                    await signOut(auth);
-                    showToast("已成功登出");
-                } catch(e) {
-                    console.error("Logout failed", e);
-                }
-            });
-            document.getElementById('admin-toggle-btn').addEventListener('click', window.toggleAdminView);
-            
-            // 綁定說明書事件
-            document.getElementById('guide-modal-btn').addEventListener('click', openGuideModal);
-            document.getElementById('close-guide-btn').addEventListener('click', closeGuideModal);
-            document.getElementById('guide-understood-btn').addEventListener('click', closeGuideModal);
-            document.getElementById('guide-modal').addEventListener('click', (e) => {
-                if (e.target.id === 'guide-modal') closeGuideModal(); // 點擊背景關閉
-            });
-        }
-
-        // 匯出為 Word/Google Doc 格式的邏輯
-        function exportToDoc() {
-            if (!state.currentReport) {
-                showToast("目前沒有可匯出的情報", "error");
-                return;
-            }
-            
-            const r = state.currentReport;
-            let docHTML = `
-                <h1 style="color: #047857; font-family: sans-serif;">電力最新情報分析 | ${r.reportId}</h1>
-                <p style="color: #57534e; font-size: 12px;"><strong>作者：</strong>${r.author}</p>
-                <hr style="border-top: 1px solid #e7e5e4; margin: 20px 0;">
-                <h2 style="color: #0e7490; font-family: sans-serif;">🎯 核心摘要</h2>
-                <p style="line-height: 1.6; font-size: 14px;">${r.summary}</p>
-
-                <h2 style="color: #0e7490; font-family: sans-serif;">🇹🇼 台灣現狀評估與策略</h2>
-                <h3 style="color: #292524; font-family: sans-serif;">現狀與缺口 (Gap Analysis)</h3>
-                <p style="line-height: 1.5; font-size: 14px;"><strong>目前狀態：</strong> ${r.taiwanAnalysis.currentStatus}</p>
-                <p style="line-height: 1.5; font-size: 14px; color: #9a3412;"><strong>缺口分析：</strong> ${r.taiwanAnalysis.gapAnalysis}</p>
-                
-                <h3 style="color: #292524; font-family: sans-serif;">策略建議書</h3>
-                <ul>
-                    <li style="margin-bottom: 10px; font-size: 14px;"><strong>短期對策：</strong> ${r.taiwanAnalysis.strategicRecommendations.shortTerm}</li>
-                    <li style="margin-bottom: 10px; font-size: 14px;"><strong>中期對策：</strong> ${r.taiwanAnalysis.strategicRecommendations.mediumTerm}</li>
-                    <li style="margin-bottom: 10px; font-size: 14px;"><strong>長期對策：</strong> ${r.taiwanAnalysis.strategicRecommendations.longTerm}</li>
-                </ul>
-                <br>
-                <p style="font-size: 11px; color: #a8a29e; text-align: center;">自動生成自 台灣電力最新情報分析平台 | Vibe Coding 專案</p>
-            `;
-
-            // 包裝成 Word 相容的 XML/HTML 格式
-            const preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
-            const postHtml = "</body></html>";
-            const finalHtml = preHtml + docHTML + postHtml;
-
-            // 建立 Blob 物件，指定 MIME Type 為 Word 文件，並加上 UTF-8 BOM (\ufeff) 確保中文不亂碼
-            const blob = new Blob(['\ufeff', finalHtml], {
-                type: 'application/msword'
-            });
-
-            // 觸發隱藏的下載行為
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `電力情報_${r.reportId}.doc`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            
-            showToast(`成功匯出 ${r.reportId} 報告為文件格式`);
-        }
-
-        window.toggleAdminView = () => {
-            state.isAdminView = !state.isAdminView;
-            const mainView = document.getElementById('main-view');
-            const adminView = document.getElementById('admin-view');
-            const toggleBtnText = document.getElementById('admin-toggle-text');
-            const toggleBtnIcon = document.querySelector('#admin-toggle-btn i');
-
-            if (state.isAdminView) {
-                mainView.classList.add('hidden');
-                mainView.classList.remove('fade-enter-active');
-                
-                adminView.classList.remove('hidden');
-                setTimeout(() => adminView.classList.add('fade-enter-active'), 50);
-                
-                toggleBtnText.textContent = "返回首頁";
-                toggleBtnIcon.className = "fa-solid fa-house";
-                window.fetchUsers();
-            } else {
-                adminView.classList.add('hidden');
-                adminView.classList.remove('fade-enter-active');
-                
-                mainView.classList.remove('hidden');
-                setTimeout(() => mainView.classList.add('fade-enter-active'), 50);
-                
-                toggleBtnText.textContent = "後台管理";
-                toggleBtnIcon.className = "fa-solid fa-gauge-high";
-            }
-        };
-
-        window.fetchUsers = async () => {
-            const listContainer = document.getElementById('admin-users-list');
-            if (!db) return;
-            
-            listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-stone-500 font-medium"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i> 載入會員資料中...</td></tr>`;
-            
-            try {
-                const q = query(collection(db, getUsersCollectionPath()));
-                const querySnapshot = await getDocs(q);
-                
-                let users = [];
-                querySnapshot.forEach((doc) => {
-                    users.push({ id: doc.id, ...doc.data() });
-                });
-
-                users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                if (users.length === 0) {
-                    listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-stone-500 font-medium">目前尚無註冊會員</td></tr>`;
-                    return;
-                }
-
-                listContainer.innerHTML = users.map(user => `
-                    <tr class="hover:bg-stone-50 transition bg-white">
-                        <td class="px-4 py-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs uppercase border border-emerald-200">
-                                    ${user.name ? user.name.substring(0, 1) : 'U'}
-                                </div>
-                                <span class="font-bold text-stone-700">${user.name || '未命名'}</span>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-stone-500 font-medium">${user.email}</td>
-                        <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded text-[10px] bg-cyan-50 text-cyan-700 border border-cyan-200 font-bold shadow-sm">
-                                ${user.role || '一般會員'}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-stone-500 font-medium">${new Date(user.createdAt).toLocaleString()}</td>
-                        <td class="px-4 py-3 text-right">
-                            <span class="text-emerald-600 font-bold text-xs flex items-center justify-end gap-1"><i class="fa-solid fa-circle text-[8px]"></i> 正常</span>
-                        </td>
-                    </tr>
-                `).join('');
-
-            } catch (error) {
-                console.error("Error fetching users:", error);
-                listContainer.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i> 讀取失敗，請確認資料庫連線或權限</td></tr>`;
-            }
-        };
-
-        function showLoginOverlay() {
-            const overlay = document.getElementById('login-overlay');
-            if(overlay) {
-                overlay.classList.remove('hidden');
-                setTimeout(() => {
-                    overlay.style.opacity = '1';
-                    overlay.style.pointerEvents = 'auto';
-                }, 10);
-            }
-        }
-
-        function hideLoginOverlay() {
-            const overlay = document.getElementById('login-overlay');
-            if(overlay) {
-                overlay.style.opacity = '0';
-                overlay.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    overlay.classList.add('hidden');
-                }, 500);
-            }
-        }
-
-        function bindLoginEvents() {
-            const loginForm = document.getElementById('login-form');
-            const guestBtn = document.getElementById('guest-login-btn');
-            const tabLogin = document.getElementById('tab-login');
-            const tabRegister = document.getElementById('tab-register');
-            const nameField = document.getElementById('name-field');
-            const confirmPasswordField = document.getElementById('confirm-password-field');
-            const authBtnText = document.getElementById('auth-btn-text');
-            const authOptions = document.getElementById('auth-options');
-            const guestDivider = document.getElementById('guest-divider');
-            
-            let isRegisterMode = false;
-
-            function setAuthMode(register) {
-                isRegisterMode = register;
-                if (register) {
-                    tabRegister.classList.add('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
-                    tabRegister.classList.remove('text-stone-500');
-                    tabLogin.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
-                    tabLogin.classList.add('text-stone-500');
-                    
-                    nameField.classList.remove('hidden');
-                    confirmPasswordField.classList.remove('hidden');
-                    document.getElementById('login-name').required = true;
-                    document.getElementById('login-confirm-password').required = true;
-                    
-                    authBtnText.textContent = "立即註冊";
-                    authOptions.classList.add('hidden');
-                    guestDivider.classList.add('hidden');
-                    guestBtn.classList.add('hidden');
-                } else {
-                    tabLogin.classList.add('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
-                    tabLogin.classList.remove('text-stone-500');
-                    tabRegister.classList.remove('bg-white', 'text-emerald-700', 'shadow-sm', 'border', 'border-stone-200/50');
-                    tabRegister.classList.add('text-stone-500');
-                    
-                    nameField.classList.add('hidden');
-                    confirmPasswordField.classList.add('hidden');
-                    document.getElementById('login-name').required = false;
-                    document.getElementById('login-confirm-password').required = false;
-                    
-                    authBtnText.textContent = "登入系統";
-                    authOptions.classList.remove('hidden');
-                    guestDivider.classList.remove('hidden');
-                    guestBtn.classList.remove('hidden');
-                }
-            }
-
-            if (tabLogin && tabRegister) {
-                tabLogin.addEventListener('click', () => setAuthMode(false));
-                tabRegister.addEventListener('click', () => setAuthMode(true));
-            }
-
-            if(loginForm) {
-                loginForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const name = document.getElementById('login-name').value;
-                    const email = document.getElementById('login-email').value;
-                    const password = document.getElementById('login-password').value;
-                    const confirmPassword = document.getElementById('login-confirm-password').value;
-                    const btn = loginForm.querySelector('button[type="submit"]');
-                    const originalText = btn.innerHTML;
-                    
-                    if (isRegisterMode && password !== confirmPassword) {
-                        showToast("兩次輸入的密碼不一致，請重新確認。", "error");
-                        return;
-                    }
-                    
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> 處理中...';
-
-                    try {
-                        if (isRegisterMode) {
-                            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                            const user = userCredential.user;
-                            
-                            if (db) {
-                                await setDoc(doc(db, getUsersCollectionPath(), user.uid), {
-                                    name: name || "新會員",
-                                    email: email,
-                                    role: "member",
-                                    createdAt: new Date().toISOString()
-                                });
-                            }
-                            showToast("註冊成功！歡迎加入。");
-                        } else {
-                            await signInWithEmailAndPassword(auth, email, password);
-                            showToast("登入成功！");
-                        }
-                    } catch (error) {
-                        console.error("Auth error:", error);
-                        if (error.code === 'auth/email-already-in-use') {
-                            showToast("該電子郵件已被註冊。", "error");
-                        } else if (error.code === 'auth/weak-password') {
-                            showToast("密碼強度過弱 (至少 6 個字元)。", "error");
-                        } else {
-                            showToast("驗證失敗，請檢查帳號密碼。", "error");
-                        }
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                    }
-                });
-            }
-
-            if(guestBtn) {
-                guestBtn.addEventListener('click', async () => {
-                    const originalText = guestBtn.innerHTML;
-                    guestBtn.disabled = true;
-                    guestBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> 進入中...';
-
-                    try {
-                        await signInAnonymously(auth);
-                        showToast("訪客登入成功！");
-                    } catch (error) {
-                        console.error("Guest login error:", error);
-                        showToast("訪客登入失敗。", "error");
-                        guestBtn.disabled = false;
-                        guestBtn.innerHTML = originalText;
-                    }
-                });
-            }
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toast-message');
-            const iconEl = toast.querySelector('i');
-            const toastBox = toast.querySelector('div');
-            
-            msgEl.textContent = message;
-            
-            if (type === 'error') {
-                iconEl.className = 'fa-solid fa-triangle-exclamation text-red-500 text-lg';
-                toastBox.classList.replace('border-stone-200', 'border-red-200');
-                toastBox.classList.add('bg-red-50');
-                toastBox.classList.remove('bg-white/95');
-                msgEl.classList.add('text-red-800');
-            } else {
-                iconEl.className = 'fa-solid fa-circle-check text-emerald-600 text-lg';
-                toastBox.classList.replace('border-red-200', 'border-stone-200');
-                toastBox.classList.add('bg-white/95');
-                toastBox.classList.remove('bg-red-50');
-                msgEl.classList.remove('text-red-800');
-            }
-
-            toast.style.transform = 'translateY(0)';
-            toast.style.opacity = '1';
-            
-            setTimeout(() => {
-                toast.style.transform = 'translateY(20px)';
-                toast.style.opacity = '0';
-            }, 3000);
-        }
-
-        // Feature 1: Simulate Gemini API Generation
+        // Feature 1: Simulate Gemini API Generation (Gemini-3.5-flash 高速版)
         async function simulateGeminiAnalysis() {
             const btn = document.getElementById('trigger-gemini-btn');
             const originalContent = btn.innerHTML;
@@ -1219,8 +465,6 @@
             btn.innerHTML = `<i class="fa-solid fa-bolt text-yellow-300"></i> Flash 引擎高速解析中...`;
             btn.classList.replace('from-emerald-600', 'from-stone-400');
             btn.classList.replace('to-cyan-600', 'to-stone-500');
-            btn.classList.replace('hover:from-emerald-700', 'hover:from-stone-500');
-            btn.classList.replace('hover:to-cyan-700', 'hover:to-stone-600');
 
             try {
                 let nextWeek = 1;
@@ -1231,7 +475,7 @@
                 }
                 const newId = `2026-W${nextWeek.toString().padStart(2, '0')}`;
 
-                // Gemini 3.5 Flash 高速模擬 (只需 0.8 秒)
+                // Gemini 3.5 Flash 高速模擬 (僅需 0.8秒)
                 await new Promise(resolve => setTimeout(resolve, 800));
 
                 const generatedReport = {
@@ -1239,46 +483,93 @@
                     createdTime: new Date().toISOString(),
                     author: "Casey Chen (Global Power Expert)",
                     authorBio: "全球電網韌性與淨零工程首席分析師",
-                    summary: `本週 Gemini-3.5-flash 追蹤重點：美國 PJM 容量市場價格飆升 800%，凸顯 AI 負載對電網的猛烈衝擊；德州 ERCOT 則透過擴大 ADER (分散式資源聚合) 計畫迎戰極端氣候。全球 ISO 的解方高度一致：強制將 AI 用電與「靈活資源 (Flexible Resources)」深度綁定。`,
+                    summary: `本週 Gemini-3.5-flash 追蹤全球十大 ISO 最新動態：極端高溫席捲北半球，AI 負載疊加空調需求導致多國頻率下探。各國監管機構正強制解鎖「分散式彈性」，要求 AI 負載必須成為電網的『主動穩定器』而非單純消耗者。台灣應立即導入合成慣量與自動負載卸載(Load Shedding)機制。`,
                     globalIntelligence: [
                         {
                             region: "美東 (PJM)", flag: "🇺🇸",
-                            title: "容量市場價格暴漲，AI 負載吞噬備用容量",
-                            content: "全美最大 ISO PJM 最新容量拍賣結果顯示，結算價格較去年飆漲近 9 倍。主因是傳統燃煤機組加速退役，而 AI 數據中心的用電申請(Queue)高達數十 GW。PJM 正推動「快速審查路徑」，允許自備 24/7 零碳排電源(CFE)的 AI DC 優先併網。",
-                            metrics: { resilienceScore: 78, vppAdoptionRate: "38%" },
+                            title: "容量拍賣創新高，AI 巨頭面臨 24/7 CFE 壓力",
+                            content: "PJM 最新容量市場結算價破紀錄，主因是燃煤退役與 AI 負載暴增。PJM 提出新解方：允許 AI 數據中心若能證明 100% 採用在地化、每小時匹配的零碳能源(24/7 CFE)與長時儲能(LDES)，即可豁免高額的系統升級分攤費用。",
+                            metrics: { resilienceScore: 80, vppAdoptionRate: "48%" },
                             tags: ["AI DC", "AI用電", "電網韌性"]
                         },
                         {
-                            region: "德州 (ERCOT)", flag: "🇺🇸",
-                            title: "ADER 專案擴容，特斯拉 VPP 成為調度主力",
-                            content: "面對酷暑與獨立電網的脆弱性，ERCOT 大幅放寬「聚合分散式能源(ADER)」參與備轉容量市場的限制。超過上萬組 Powerwall 與智慧溫控設備組成的 VPP，能在系統頻率下降的數秒內自動削減負載，成為防範大停電的第一道防線。",
-                            metrics: { resilienceScore: 85, vppAdoptionRate: "65%" },
+                            region: "加州 (CAISO)", flag: "🇺🇸",
+                            title: "日落危機，VPP 成為晚間淨負載爬坡主力",
+                            content: "CAISO 太陽能發電量創新高，傍晚 6-8 點的爬坡率達 25GW/3hr。CAISO 結合 OhmConnect 等聚合商，在尖峰時段瞬間遙控百萬台智慧溫控器與家用儲能，成功削減 2GW 負載，取代高污染燃氣機組。",
+                            metrics: { resilienceScore: 89, vppAdoptionRate: "65%" },
                             tags: ["虛擬電廠", "電網韌性"]
                         },
                         {
+                            region: "德州 (ERCOT)", flag: "🇺🇸",
+                            title: "電壓崩潰防禦，強制風光配備合成慣量",
+                            content: "面對氣候變遷帶來的長期無風無光，ERCOT 電網慣量降至危險邊緣。當局正研擬新規，要求新設 >10MW 風光廠必須透過逆變器控制演算法提供「合成慣量(Synthetic Inertia)」，確保 RoCoF (頻率變化率) 穩定。",
+                            metrics: { resilienceScore: 84, vppAdoptionRate: "70%" },
+                            tags: ["電網慣量", "電網韌性"]
+                        },
+                        {
+                            region: "英國 (ESO)", flag: "🇬🇧",
+                            title: "開放分佈式重啟 (Distributed ReStart)",
+                            content: "ESO 成功實證全球首例「分佈式重啟」，利用太陽能、風力發電結合網格成型儲能(GFM)，從配電網由下而上(Bottom-up)重新啟動英國輸電系統，顛覆全黑啟動需依賴化石燃料的百年觀念。",
+                            metrics: { resilienceScore: 96, vppAdoptionRate: "72%" },
+                            tags: ["電網韌性", "電網慣量", "虛擬電廠"]
+                        },
+                        {
+                            region: "澳洲 (AEMO)", flag: "🇦🇺",
+                            title: "雙向電價 (Two-Way Pricing) 正式上路",
+                            content: "為了解決屋頂太陽能中午倒灌導致變壓器過載，AEMO 推動配電商實施「太陽能出口收費」。壅塞時段將綠電輸出至電網將被收取懲罰性費用，藉此強制家戶加裝電池儲能，實現自我消耗(Self-consumption)。",
+                            metrics: { resilienceScore: 90, vppAdoptionRate: "82%" },
+                            tags: ["電網韌性", "AI用電"]
+                        },
+                        {
                             region: "歐洲 (ENTSO-E)", flag: "🇪🇺",
-                            title: "跨國頻率控制儲備 (FCR) 引入電動車隊",
-                            content: "歐洲聯網(ENTSO-E)進一步整合跨國輔助服務市場。最新規範允許跨國界聚合電動車充電樁(V2G)，當歐洲大陸頻率偏離 50Hz 時，百萬台 EV 能以「分散式慣性」的形式，瞬間停止充電甚至反向放電，大幅降低對天然氣快啟機組的依賴。",
-                            metrics: { resilienceScore: 93, vppAdoptionRate: "58%" },
-                            tags: ["電網慣性", "虛擬電廠"]
+                            title: "AI 預測跨國電力潮流 (Cross-Border Flow)",
+                            content: "離岸風電大量併網使歐洲電網潮流極度複雜。ENTSO-E 全面導入機器學習(ML)與數位分身(Digital Twin)，每 15 分鐘重新計算全歐洲 40 國的可用傳輸容量(ATC)，極大化跨國再生能源交易。",
+                            metrics: { resilienceScore: 94, vppAdoptionRate: "60%" },
+                            tags: ["AI用電", "電網韌性"]
+                        },
+                        {
+                            region: "日本 (OCCTO)", flag: "🇯🇵",
+                            title: "非同步互聯，擴大跨區 HVDC 建設",
+                            content: "頻率不一(50/60Hz)成為日本調度死穴。OCCTO 宣布斥資數千億新建多條高壓直流輸電(HVDC)與頻率轉換所(FC)，大幅提升北海道風電輸送至東京的能力，增強抵禦地震的網狀韌性。",
+                            metrics: { resilienceScore: 88, vppAdoptionRate: "45%" },
+                            tags: ["電網韌性"]
+                        },
+                        {
+                            region: "韓國 (KPX)", flag: "🇰🇷",
+                            title: "推動 VPP 參與批發市場，打破 KEPCO 壟斷",
+                            content: "韓國政府正式修法，允許虛擬電廠(VPP)跨越 1MW 門檻，直接在 KPX 批發市場與傳統發電廠競價。旨在利用民間資本活化分散式資源，解決國營 KEPCO 無力擴建電網的財務危機。",
+                            metrics: { resilienceScore: 83, vppAdoptionRate: "40%" },
+                            tags: ["虛擬電廠"]
+                        },
+                        {
+                            region: "加拿大 (IESO)", flag: "🇨🇦",
+                            title: "需量反應 2.0，AI 自動化負載轉移",
+                            content: "安大略省的工業大戶全面導入 AI 能管系統。當預測到電網邊際排放係數或電價將飆高時，工廠設備能在毫秒內自動降載或切換至自備儲能，實現全自動經濟型需量反應。",
+                            metrics: { resilienceScore: 92, vppAdoptionRate: "35%" },
+                            tags: ["AI用電", "虛擬電廠"]
+                        },
+                        {
+                            region: "中國 (SGCC)", flag: "🇨🇳",
+                            title: "電動車 V2G 規模化示範，削峰填谷",
+                            content: "國家電網在長三角啟動全球最大規模 V2G 實證。利用 AI 調度十萬輛電動車在晚間尖峰向社區電網放電，深夜離峰充電，單日轉移負載數百 MW，有效延緩配電網升級投資。",
+                            metrics: { resilienceScore: 86, vppAdoptionRate: "55%" },
+                            tags: ["虛擬電廠", "AI用電"]
                         }
                     ],
                     taiwanAnalysis: {
-                        currentStatus: "台灣正步入夏季高負載期，太陽能滲透率在中午時段可達 30-40%。台電面臨的不再是正午缺電，而是傍晚光電退場時，系統需在 2-3 小時內填補 7-8 GW 缺口的「極端爬坡(Ramp Rate)考驗」。同時，大量 AI 伺服器導入造成基礎負載(Base Load)顯著墊高。",
-                        gapAnalysis: "相較於 ERCOT 將數萬戶家庭儲能化為備轉容量，台灣的輔助服務市場(dReg)過度集中於少數企業的百萬瓦級(MW)大儲能案場。缺乏針對商辦空調、電動車充電等「螞蟻雄兵」的聚合通訊標準(如 OpenADR 的普及)，導致民間分散式彈性未能解放。",
+                        currentStatus: "進入高溫夏季，台灣面臨兩大夾擊：日落時分極端爬坡(Ramp Rate)需求高達 8GW；北部 AI 聚落基礎負載持續攀升。儘管已部署 dReg/E-dReg 儲能，但多集中於單一頻率控制功能，面對區域電壓崩潰風險防禦縱深明顯不夠。",
+                        gapAnalysis: "相較英國 ESO 直接採購「慣量」與 CAISO 強制逆變器具備 GFM 功能，台灣輔助服務市場過度單一化，且未將 AI 數據中心視為『可控資源』。未要求其配備長時儲能或進行秒級「自動負載卸載」，錯失龐大需量反應潛力。",
                         strategicRecommendations: {
-                            shortTerm: "【時間電價極端化與 AI 排程】拉大時間電價(TOU)的尖離峰價差，設定「超級尖峰(Super Peak)」費率。引導 AI 資料中心將非緊急運算任務(如模型訓練)排程至中午光電充裕時段，降低傍晚電網爬坡壓力。",
-                            mediumTerm: "【確立 24/7 CFE 規範與 V2G 落地】針對新設 AI 資料中心，應效法歐美導入 24/7 無碳能源(Carbon-Free Energy)匹配要求，而非僅購買年度綠電憑證。盡速修訂《電業法》相關子法，開放雙向充放電(V2G)設備商轉，釋放百萬輛電動車的儲能潛力。",
-                            longTerm: "【建構國家級 DERMS 平台】台電應從單純的「電力供應者」轉型為「平台營運商(DSO)」。建構分散式資源管理系統(DERMS)，利用 AI 預測各饋線的即時供需，實現從高壓輸電端到低壓配電端的全域動態平衡，徹底解決區域壅塞。"
+                            shortTerm: "【AI 負載動態卸載協定】針對新申請供電的 AI DC，不應僅以「無餘裕」拒絕。應建立特許條款：若承諾在頻率低於 59.5Hz 時，於 5 秒內卸載 30% 用電，則給予優先併網權。",
+                            mediumTerm: "【重構輔助服務：導入 GFM 與黑啟動】仿效英國與 ERCOT，電力交易平台應立即新增「電網慣量(Inertia)」與「短路容量」交易。給予構網型(GFM)技術極高費率乘數，並開放分散式資源參與全黑啟動實證。",
+                            longTerm: "【配電級 DSO 平台與雙向電價】台電配電處應轉型為配電系統營運商(DSO)。仿效澳洲，建構國家級 DERMS 平台並實施雙向時間電價(Two-Way TOU)，引導屋頂光電結合電池就地消耗，從配電端解決輸電網壓力。"
                         }
                     },
-                    keywordsMetadata: {
-                        "虛擬電廠": true, "AI用電": true, "電網慣性": true, "電網韌性": true, "AI DC": true
-                    }
+                    keywordsMetadata: { "虛擬電廠": true, "AI用電": true, "電網慣量": true, "電網韌性": true, "AI DC": true }
                 };
 
                 if (db) {
-                    const docRef = doc(db, getCollectionPath(), generatedReport.reportId);
+                    const docRef = doc(db, COLLECTION_PATH, generatedReport.reportId);
                     await setDoc(docRef, generatedReport);
                 }
 
@@ -1288,21 +579,283 @@
                 
                 renderFilterTags();
                 renderUI();
-                showToast(`成功極速生成 ${newId} 最新情報！`);
+                showToast(`成功極速生成 ${newId} 全球十大 ISO 深度情報！`);
 
             } catch (error) {
                 console.error("Agent execution failed:", error);
-                showToast("系統正在自動校準最新情報，目前呈現為歷史備份資料。", "error");
+                showToast("雲端寫入失敗，請檢查 Firebase Rules。改為本機呈現。", "error");
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalContent;
                 btn.classList.replace('from-stone-400', 'from-emerald-600');
                 btn.classList.replace('to-stone-500', 'to-cyan-600');
-                btn.classList.replace('hover:from-stone-500', 'hover:from-emerald-700');
-                btn.classList.replace('hover:to-stone-600', 'hover:to-cyan-700');
             }
         }
 
+        function renderUI() {
+            if (!state.currentReport) return;
+            
+            document.getElementById('hero-week-badge').innerHTML = `<i class="fa-regular fa-calendar-check mr-1"></i> ${state.currentReport.reportId} 洞察報告`;
+            document.getElementById('hero-summary').textContent = state.currentReport.summary;
+            
+            renderGlobalIntel();
+            renderTaiwanAnalysis();
+            renderHistory();
+        }
+
+        function renderGlobalIntel() {
+            const grid = document.getElementById('intel-grid');
+            grid.innerHTML = '';
+            
+            const intelList = state.currentReport.globalIntelligence;
+            
+            intelList.forEach((intel, index) => {
+                // Filter logic
+                if (state.activeFilter && !intel.tags.includes(state.activeFilter)) return;
+                
+                const tagHtml = intel.tags.map(tag => 
+                    `<span class="px-2 py-0.5 rounded text-[10px] font-medium border ${KEYWORD_STYLES[tag] || 'bg-stone-100 text-stone-600'}">${tag}</span>`
+                ).join('');
+
+                const cardHtml = `
+                    <div class="glass-panel rounded-xl p-4 flex flex-col h-full fade-in hover:shadow-md transition-shadow" style="animation-delay: ${index * 0.05}s">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-stone-500 tracking-wider uppercase">${intel.flag} ${intel.region}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded flex items-center gap-1 border border-emerald-100" title="電網韌性分數">
+                                    <i class="fa-solid fa-shield-heart"></i> ${intel.metrics.resilienceScore}
+                                </span>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-stone-800 text-sm mb-2 leading-tight">${intel.title}</h4>
+                        <p class="text-xs text-stone-600 mb-4 flex-grow leading-relaxed">${intel.content}</p>
+                        <div class="flex flex-wrap gap-1 mt-auto">
+                            ${tagHtml}
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHtml);
+            });
+            
+            if(grid.innerHTML === '') {
+                grid.innerHTML = `
+                <div class="col-span-full p-8 text-center text-stone-500 glass-panel rounded-xl">
+                    <i class="fa-solid fa-magnifying-glass text-2xl mb-2 text-stone-400"></i>
+                    <p>此分類下目前沒有相關的全球情報。</p>
+                </div>`;
+            }
+        }
+
+        function renderTaiwanAnalysis() {
+            const container = document.getElementById('taiwan-analysis-container');
+            const data = state.currentReport.taiwanAnalysis;
+            
+            // Check if active filter matches any tags in the report (mock simplistic approach)
+            if (state.activeFilter && !state.currentReport.keywordsMetadata[state.activeFilter]) {
+                 container.innerHTML = `<p class="text-sm text-stone-500 text-center py-4">查無對應 <b>${state.activeFilter}</b> 之策略分析。</p>`;
+                 return;
+            }
+
+            container.innerHTML = `
+                <div class="fade-in">
+                    <h4 class="text-sm font-bold text-rose-600 flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i> 台灣現狀瓶頸
+                    </h4>
+                    <p class="text-sm text-stone-700 leading-relaxed bg-rose-50/50 p-3 rounded-lg border border-rose-100">${data.currentStatus}</p>
+                </div>
+                <div class="fade-in" style="animation-delay: 0.1s">
+                    <h4 class="text-sm font-bold text-amber-600 flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-code-compare"></i> 國際對標與落差分析
+                    </h4>
+                    <p class="text-sm text-stone-700 leading-relaxed bg-amber-50/50 p-3 rounded-lg border border-amber-100">${data.gapAnalysis}</p>
+                </div>
+                <div class="mt-2 pt-4 border-t border-stone-100 fade-in" style="animation-delay: 0.2s">
+                    <h4 class="text-sm font-bold text-emerald-700 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb"></i> 戰略對策與佈局建議
+                    </h4>
+                    <div class="flex flex-col gap-3">
+                        <div class="p-3 bg-stone-50 rounded-lg border border-stone-200 hover:border-emerald-200 transition-colors">
+                            <span class="text-xs font-bold text-emerald-600 mb-1 block">短期對策</span>
+                            <p class="text-xs text-stone-700 leading-relaxed">${data.strategicRecommendations.shortTerm}</p>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded-lg border border-stone-200 hover:border-cyan-200 transition-colors">
+                            <span class="text-xs font-bold text-cyan-600 mb-1 block">中期對策</span>
+                            <p class="text-xs text-stone-700 leading-relaxed">${data.strategicRecommendations.mediumTerm}</p>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded-lg border border-stone-200 hover:border-indigo-200 transition-colors">
+                            <span class="text-xs font-bold text-indigo-600 mb-1 block">長期戰略</span>
+                            <p class="text-xs text-stone-700 leading-relaxed">${data.strategicRecommendations.longTerm}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            document.getElementById('history-count').textContent = `${state.reports.length} 筆`;
+            list.innerHTML = '';
+            
+            state.reports.forEach((report, index) => {
+                const isActive = state.currentReport && state.currentReport.reportId === report.reportId;
+                const html = `
+                    <div class="p-3 rounded-xl border ${isActive ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-stone-200 hover:border-emerald-300'} cursor-pointer transition-colors flex justify-between items-center group"
+                         onclick="selectReport('${report.reportId}')">
+                        <div>
+                            <div class="font-bold text-sm ${isActive ? 'text-emerald-700' : 'text-stone-700'}">${report.reportId}</div>
+                            <div class="text-[10px] text-stone-400 mt-0.5">${new Date(report.createdTime).toLocaleDateString()}</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs ${isActive ? 'text-emerald-500' : 'text-stone-300 group-hover:text-emerald-400'}"></i>
+                    </div>
+                `;
+                list.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function renderFilterTags() {
+            const container = document.getElementById('filter-container');
+            container.innerHTML = '';
+            
+            KEYWORDS.forEach(tag => {
+                const isActive = state.activeFilter === tag;
+                const baseStyle = KEYWORD_STYLES[tag] || 'text-stone-700 bg-stone-100 border-stone-200';
+                const activeStyle = isActive ? 'ring-2 ring-offset-1 ring-stone-400' : 'opacity-70 hover:opacity-100 cursor-pointer';
+                
+                const html = `<button onclick="toggleFilter('${tag}')" class="px-3 py-1 rounded-full text-xs font-medium border transition-all ${baseStyle} ${activeStyle}">${tag}</button>`;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function toggleFilter(tag) {
+            if (state.activeFilter === tag) {
+                state.activeFilter = null; // deselect
+            } else {
+                state.activeFilter = tag;
+            }
+            renderFilterTags();
+            renderUI();
+        }
+        
+        window.toggleFilter = toggleFilter; // Expose to global scope for HTML inline handlers
+
+        function selectReport(reportId) {
+            const report = state.reports.find(r => r.reportId === reportId);
+            if (report) {
+                state.currentReport = report;
+                state.activeFilter = null;
+                renderFilterTags();
+                renderUI();
+            }
+        }
+        window.selectReport = selectReport;
+
+        function bindEvents() {
+            document.getElementById('trigger-gemini-btn').addEventListener('click', simulateGeminiAnalysis);
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const bgClass = type === 'success' ? 'bg-emerald-600' : 'bg-rose-600';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-circle-xmark';
+            
+            const toastHtml = `
+                <div class="toast-slide ${bgClass} text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 text-sm font-medium">
+                    <i class="fa-solid ${icon}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', toastHtml);
+            
+            const toastElement = container.lastElementChild;
+            setTimeout(() => {
+                toastElement.style.opacity = '0';
+                toastElement.style.transform = 'translateX(100%)';
+                setTimeout(() => toastElement.remove(), 300);
+            }, 3000);
+        }
+
+        function exportToDoc() {
+            if (!state.currentReport) return;
+            const r = state.currentReport;
+            
+            let docHtml = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='utf-8'><title>${r.reportId} 台灣電力最新情報</title></head>
+                <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+                    <h1 style="color: #059669;">台灣電力最新情報分析 | 淨零工程版</h1>
+                    <p><strong>報告期數:</strong> ${r.reportId}</p>
+                    <p><strong>建立時間:</strong> ${new Date(r.createdTime).toLocaleString()}</p>
+                    <p><strong>分析師:</strong> ${r.author} - ${r.authorBio}</p>
+                    <hr>
+                    <h2 style="color: #0369a1;">核心摘要</h2>
+                    <p>${r.summary}</p>
+                    <hr>
+                    <h2 style="color: #0369a1;">全球十大 ISO 最新情報</h2>
+            `;
+
+            r.globalIntelligence.forEach(intel => {
+                docHtml += `
+                    <div style="margin-bottom: 20px; padding: 10px; border-left: 4px solid #10b981; background-color: #f9fafb;">
+                        <h3 style="margin-top: 0;">${intel.flag} ${intel.region} - ${intel.title}</h3>
+                        <p>${intel.content}</p>
+                        <p><small><strong>標籤:</strong> ${intel.tags.join(', ')} | <strong>韌性分數:</strong> ${intel.metrics.resilienceScore}</small></p>
+                    </div>
+                `;
+            });
+
+            docHtml += `
+                    <hr>
+                    <h2 style="color: #0369a1;">台灣現狀評估與戰略建議</h2>
+                    <h3 style="color: #e11d48;">台灣現狀瓶頸</h3>
+                    <p>${r.taiwanAnalysis.currentStatus}</p>
+                    <h3 style="color: #d97706;">國際對標與落差分析</h3>
+                    <p>${r.taiwanAnalysis.gapAnalysis}</p>
+                    <h3 style="color: #047857;">戰略對策與佈局建議</h3>
+                    <ul>
+                        <li><strong>短期對策:</strong> ${r.taiwanAnalysis.strategicRecommendations.shortTerm}</li>
+                        <li><strong>中期對策:</strong> ${r.taiwanAnalysis.strategicRecommendations.mediumTerm}</li>
+                        <li><strong>長期戰略:</strong> ${r.taiwanAnalysis.strategicRecommendations.longTerm}</li>
+                    </ul>
+                    <p style="text-align: center; margin-top: 40px; font-size: 12px; color: #6b7280;">
+                        Generated by AI Vibe Coding System.
+                    </p>
+                </body></html>
+            `;
+
+            const blob = new Blob(['\ufeff', docHtml], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `電力情報_${r.reportId}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('文件匯出成功！請至下載資料夾查看。', 'success');
+        }
+        window.exportToDoc = exportToDoc;
+
+        // User Guide Modal Toggle
+        function toggleUserGuide() {
+            const modal = document.getElementById('user-guide-modal');
+            const content = document.getElementById('user-guide-content');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+        window.toggleUserGuide = toggleUserGuide;
+
+        // Run
         document.addEventListener('DOMContentLoaded', initApp);
 
     </script>
