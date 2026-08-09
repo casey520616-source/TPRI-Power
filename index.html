@@ -228,6 +228,11 @@
                     <!-- Buttons will be injected here via JS -->
                 </div>
 
+                <!-- Guide Button (新增使用說明按鈕) -->
+                <button id="guide-modal-btn" class="px-3 py-1.5 rounded-lg bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50 text-xs font-medium transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-circle-question"></i> <span class="hidden sm:inline">使用說明</span>
+                </button>
+
                 <!-- User Actions (Hidden by default) -->
                 <div id="user-actions" class="hidden flex items-center gap-2 pl-4 border-l border-stone-200">
                     <button id="admin-toggle-btn" class="px-3 py-1.5 rounded-lg bg-white text-cyan-700 border border-stone-200 hover:bg-stone-50 hover:text-cyan-800 text-xs transition flex items-center gap-2 shadow-sm">
@@ -422,6 +427,55 @@
             </p>
         </div>
     </footer>
+
+    <!-- User Guide Modal (新增使用說明彈出視窗) -->
+    <div id="guide-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-stone-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="glass-panel p-6 md:p-8 rounded-2xl w-full max-w-2xl relative z-10 max-h-[85vh] flex flex-col transform scale-95 transition-transform duration-300 bg-white/95">
+            <!-- Close Button -->
+            <button id="close-guide-btn" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-700 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 text-xl shadow-sm">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-stone-800">平台使用說明書</h2>
+                    <p class="text-xs text-stone-500 font-medium">Platform Guide & Manual</p>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="overflow-y-auto pr-4 flex-grow space-y-6 text-sm text-stone-700 font-medium">
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> 1. AI 代理分析生成</h3>
+                    <p class="leading-relaxed">點擊右側面板的 <b>「觸發 Gemini-3.5-flash 分析」</b> 按鈕，系統將啟動 AI 代理程式，自動為您抓取並分析全球與台灣本週最新的電力情報，並將結果結構化儲存至 Firebase 雲端資料庫。</p>
+                </div>
+
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-filter"></i> 2. 關鍵字智能篩選</h3>
+                    <p class="leading-relaxed">網頁最上方的 <b>五大關鍵字標籤</b>（如：虛擬電廠、電網韌性等），點擊後可即時過濾左側「全球最新電力情報」看板，快速聚焦您關注的技術領域。再次點擊即可取消篩選。</p>
+                </div>
+
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-file-export"></i> 3. 匯出分析文件</h3>
+                    <p class="leading-relaxed">在左側主欄位的標題旁點擊 <b>「匯出文件」</b>，系統會自動將當前畫面的情報與對策，轉化為相容微軟 Word 與 Google Docs 的 <code>.doc</code> 格式，方便您直接附加於決策簡報中。</p>
+                </div>
+                
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <h3 class="text-base font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left"></i> 4. 歷史情報檢索</h3>
+                    <p class="leading-relaxed">在右下方的 <b>「歷史情報歸檔」</b> 區塊，您可以透過搜尋框輸入週數 (如: 2026-W08) 或情報摘要內的關鍵字，點擊列表即可調閱過去的完整報告。</p>
+                </div>
+            </div>
+            
+            <div class="mt-6 pt-4 border-t border-stone-200 flex justify-end">
+                <button id="guide-understood-btn" class="px-6 py-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-700 hover:to-cyan-700 text-white rounded-lg text-sm font-medium transition shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-check"></i> 我了解了
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
@@ -804,6 +858,26 @@
             }
         };
 
+        // 新增：開啟與關閉說明視窗邏輯
+        function openGuideModal() {
+            const modal = document.getElementById('guide-modal');
+            const content = modal.querySelector('div.glass-panel');
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; // 強制重繪以觸發動畫
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        }
+
+        function closeGuideModal() {
+            const modal = document.getElementById('guide-modal');
+            const content = modal.querySelector('div.glass-panel');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
         function bindEvents() {
             document.getElementById('history-search').addEventListener('input', renderHistoryList);
             document.getElementById('trigger-gemini-btn').addEventListener('click', simulateGeminiAnalysis);
@@ -817,37 +891,31 @@
                 }
             });
             document.getElementById('admin-toggle-btn').addEventListener('click', window.toggleAdminView);
+            
+            // 綁定說明書事件
+            document.getElementById('guide-modal-btn').addEventListener('click', openGuideModal);
+            document.getElementById('close-guide-btn').addEventListener('click', closeGuideModal);
+            document.getElementById('guide-understood-btn').addEventListener('click', closeGuideModal);
+            document.getElementById('guide-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'guide-modal') closeGuideModal(); // 點擊背景關閉
+            });
         }
 
-        // 新增：匯出為 Word/Google Doc 格式的邏輯
+        // 匯出為 Word/Google Doc 格式的邏輯
         function exportToDoc() {
-            if (!state.currentReport) return;
+            if (!state.currentReport) {
+                showToast("目前沒有可匯出的情報", "error");
+                return;
+            }
+            
             const r = state.currentReport;
-
-            // 組合 HTML 字串，這會是文件轉換的基礎，保留了粗體、標題與基本顏色
             let docHTML = `
-                <h1 style="color: #047857; font-family: sans-serif; font-size: 24px;">台灣電力最新情報分析 | ${r.reportId}</h1>
-                <p style="color: #57534e; font-size: 14px;"><strong>產出時間：</strong> ${new Date(r.createdTime).toLocaleString()}</p>
-                <p style="color: #57534e; font-size: 14px;"><strong>創作者：</strong> ${r.author} (${r.authorBio})</p>
-                <hr style="border: 1px solid #e7e5e4;">
-                
-                <h2 style="color: #0e7490; font-family: sans-serif;">📌 本週核心摘要</h2>
+                <h1 style="color: #047857; font-family: sans-serif;">電力最新情報分析 | ${r.reportId}</h1>
+                <p style="color: #57534e; font-size: 12px;"><strong>作者：</strong>${r.author}</p>
+                <hr style="border-top: 1px solid #e7e5e4; margin: 20px 0;">
+                <h2 style="color: #0e7490; font-family: sans-serif;">🎯 核心摘要</h2>
                 <p style="line-height: 1.6; font-size: 14px;">${r.summary}</p>
-                <hr style="border: 1px solid #e7e5e4;">
-                
-                <h2 style="color: #0e7490; font-family: sans-serif;">🌍 全球最新電力情報</h2>
-            `;
 
-            r.globalIntelligence.forEach(item => {
-                docHTML += `
-                    <h3 style="color: #292524; font-family: sans-serif;">${item.flag} ${item.region}：${item.title}</h3>
-                    <p style="line-height: 1.5; font-size: 14px;">${item.content}</p>
-                    <p style="font-size: 12px; color: #78716c;"><em>(韌性分數: ${item.metrics.resilienceScore} | VPP 滲透率: ${item.metrics.vppAdoptionRate})</em></p>
-                `;
-            });
-
-            docHTML += `
-                <hr style="border: 1px solid #e7e5e4;">
                 <h2 style="color: #0e7490; font-family: sans-serif;">🇹🇼 台灣現狀評估與策略</h2>
                 <h3 style="color: #292524; font-family: sans-serif;">現狀與缺口 (Gap Analysis)</h3>
                 <p style="line-height: 1.5; font-size: 14px;"><strong>目前狀態：</strong> ${r.taiwanAnalysis.currentStatus}</p>
